@@ -11,6 +11,47 @@ Welcome to Modular Diffusion! This package provides an easy-to-use and extendabl
 - 🤝 **Seamless Integration with PyTorch**: This project harmoniously integrates with PyTorch, allowing users to leverage the plethora of features and community support the framework has to offer.
 - 🌈 **Broad Range of Applications**: From generating high-quality images to implementing non-autoregressive audio and text synthesis pipelines, the potential uses of Modular Diffusion are vast.
 
+## Usage
+
+With Modular Diffusion, you can build and train a custom Diffusion Model in just a few lines:
+
+1. Load and normalize your dataset. We are using [MNIST](http://yann.lecun.com/exdb/mnist/).
+
+   ```python
+   x, y = zip(*MNIST(str(input), transform=ToTensor(), download=True))
+   x, y = torch.stack(x) * 2 - 1, torch.tensor(y) + 1
+   ```
+
+2. Build your custom model using Modular Diffusion's prebuilt modules ([or create your own!](https://cabralpinto.github.io/modular-diffusion/guides/custom-modules/)).
+
+   ```python
+   model = diffusion.Model(
+       data=Identity(x, y, batch=128, shuffle=True),
+       schedule=Cosine(steps=1000),
+       noise=Gaussian(parameter="epsilon", variance="fixed"),
+       net=UNet(channels=(1, 64, 128, 256), labels=10),
+       guidance=ClassifierFree(dropout=0.1, strength=2),
+       loss=Simple(parameter="epsilon"),
+   )
+   ```
+
+3. Train and sample from the model.
+
+   ```python
+   losses = [*model.train(epochs=10)]
+   z = model.sample(torch.arange(10))
+   z = z[torch.linspace(0, z.shape[0] - 1, 10).long()]
+   z = rearrange(z, "t b c h w -> c (b h) (t w)")
+   save_image((z + 1) / 2, "output.png")
+   ```
+
+ 4. Marvel at the results.
+
+    ![](docs/public/images/guides/getting-started/conditional.png)
+
+
+Check out the [examples](examples) folder in our repository for more examples and refer to our [documentation](https://cabralpinto.github.io/modular-diffusion/guides/getting-started/) for more information.
+
 ## Installation
 
 Modular Diffusion officially supports Python 3.10+ and is available on PyPI:
@@ -21,31 +62,6 @@ pip install modular-diffusion
 
 > **Note**: Although Modular Diffusion works with later Python versions, we highly recommend using Python 3.10. This is because `torch.compile`, which significantly improves the speed of the models, is not currently available for versions above Python 3.10.
 
-## Usage
-
-Using Modular Diffusion is simple and straightforward. Here is an example to get you started:
-
-```python
-import diffusion
-from diffusion.data import Identity
-from diffusion.loss import Simple
-from diffusion.net import UNet
-from diffusion.noise import Normal
-from diffusion.schedule import Linear
-
-model = diffusion.Model(
-    data=Identity(x, y, batch=128, shuffle=True),
-    schedule=Linear(1000, 0.9999, 0.98),
-    loss=Simple(),
-    noise=Normal(parameter="epsilon", variance="fixed"),
-    net=UNet(x.shape[2], labels=10),
-)
-losses = [*model.train(epochs=1000)]
-z = model.sample(torch.arange(10))
-```
-
-In this example, we train and sample from a generative diffusion model with the parameters used in the seminal work of [Ho et al. (2020)](https://arxiv.org/abs/2006.11239). Remember that the model can be customized by swapping modules or creating your own to fit your specific needs. The above example is only one of the numerous possibilities with Modular Diffusion. For more detailed examples, you can check out the [examples](examples) folder in our repository, and to explore all possibilities offered by this package, please refer to our [documentation](https://modular-diffusion.readthedocs.io/).
-
 ## Contributing
 
 Contributions to this project are very much welcome! Feel free to raise issues or submit pull requests here on GitHub.
@@ -54,6 +70,16 @@ Contributions to this project are very much welcome! Feel free to raise issues o
 
 This project is licensed under the [MIT License](LICENSE).
 
-## Contact
+## Citation
 
-If you have any questions, suggestions, or just want to say hello, feel free to email me at [jmcabralpinto@gmail.com](mailto:jmcabralpinto@gmail.com).
+If you use this library in your work, please cite it using the following BibTeX entry:
+
+```bibtex
+@misc{ModularDiffusion,
+  author = {João Cabral Pinto},
+  title = {Modular Diffusion},
+  year = {2023},
+  publisher = {GitHub},
+  howpublished = {\url{https://github.com/cabralpinto/modular-diffusion}},
+}
+```
