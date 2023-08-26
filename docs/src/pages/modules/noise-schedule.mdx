@@ -29,7 +29,7 @@ schedule = Constant(1000, 0.01)
 
 Applying `Gaussian` noise to an image using the `Constant` schedule with $T=1000$ and $k=0.01$ in equally spaced snapshots:
 
-![Image of a dog getting noisier at a constant rate.](/modular-diffusion/docs/images/modules/noise-schedule/constant.png)
+![Image of a dog getting noisier at a constant rate.](/modular-diffusion/images/modules/noise-schedule/constant.png)
 
 ## Linear schedule
 
@@ -53,7 +53,7 @@ schedule = Linear(1000, 0.9999, 0.98)
 
 Applying `Gaussian` noise to an image using the `Linear` schedule with $T=1000$, $\alpha_0=0.9999$ and $\alpha_T=0.98$ in equally spaced snapshots:
 
-![Image of a dog getting noisier at a linear rate.](/modular-diffusion/docs/images/modules/noise-schedule/linear.png)
+![Image of a dog getting noisier at a linear rate.](/modular-diffusion/images/modules/noise-schedule/linear.png)
 
 ## Cosine schedule
 
@@ -80,7 +80,7 @@ schedule = Cosine(1000)
 
 Applying `Gaussian` noise to an image using the `Cosine` schedule with $T=1000$, $s=8e-3$ and $e=2$ in equally spaced snapshots:
 
-![Image of a dog getting noisier at a cosine rate.](/modular-diffusion/docs/images/modules/noise-schedule/cosine.png)
+![Image of a dog getting noisier at a cosine rate.](/modular-diffusion/images/modules/noise-schedule/cosine.png)
 
 ## Square root schedule
 
@@ -103,7 +103,7 @@ schedule = Sqrt(1000)
 
 Applying `Gaussian` noise to an image using the `Sqrt` schedule with $T=1000$ and $s=8e-3$ in equally spaced snapshots:
 
-![Image of a dog getting noisier at a sqrt rate.](/modular-diffusion/docs/images/modules/noise-schedule/sqrt.png)
+![Image of a dog getting noisier at a sqrt rate.](/modular-diffusion/images/modules/noise-schedule/sqrt.png)
 
 ---
 

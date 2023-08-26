@@ -40,7 +40,7 @@ class Embedding(Data):
 
 In the `encode` method, we are transforming the input tensor `w` into an embedding tensor using the learned embedding layer. The `decode` method reverses this operation, by finding the most similar embedding in the embedding weight matrix to each vector in `x`.
 
-Data transformations can also be useful in cases where they have no trainable parameters. For example, the `Categorical` noise module operates over one-hot vectors, which are very memory-inneficient. To mitigate this, you may store your data as a list of labels and use the `OneHot` data transformation module to transform it into one-hot vectors on a batch-by-batch basis, saving you a lot of memory. Or your data transformation can just be a frozen variational autoencoder, like in [Stable Diffusion](https://arxiv.org/abs/2112.10752). For further details, check out our [Text Generation](/modular-diffusion/docs/guides/text-generation) and [Image Generation](/modular-diffusion/docs/guides/image-generation) tutorials.
+Data transformations can also be useful in cases where they have no trainable parameters. For example, the `Categorical` noise module operates over one-hot vectors, which are very memory-inneficient. To mitigate this, you may store your data as a list of labels and use the `OneHot` data transformation module to transform it into one-hot vectors on a batch-by-batch basis, saving you a lot of memory. Or your data transformation can just be a frozen variational autoencoder, like in [Stable Diffusion](https://arxiv.org/abs/2112.10752). For further details, check out our [Text Generation](/modular-diffusion/guides/text-generation) and [Image Generation](/modular-diffusion/guides/image-generation) tutorials.
 
 ## Noise schedule
 
@@ -158,7 +158,7 @@ Modular Diffusion comes with general-use `UNet` and `Transformer` classes, which
 >
 > When creating your neural network, it's important to remember that the first dimension of its output will be interpreted as the parameter index, irrespective of the number of parameters being predicted. For instance, if your network is predicting both the mean and variance of noise in an image, the output shape should be `[2, c, h, w]`. But even if you're predicting only the mean, the shape should be `[1, c, h, w]` -- not `[c, h, w]`.
 
-In scenarios where your network requires only a post-processing step, such as applying a `Softmax` function, there's no need to create an entirely new network class. Modular Diffusion allows for a more concise approach using the pipe operator, as shown in the [Getting Started](/modular-diffusion/docs/guides/getting-started) tutorial:
+In scenarios where your network requires only a post-processing step, such as applying a `Softmax` function, there's no need to create an entirely new network class. Modular Diffusion allows for a more concise approach using the pipe operator, as shown in the [Getting Started](/modular-diffusion/guides/getting-started) tutorial:
 
 ```python
 from diffusion.net import Transformer
@@ -194,7 +194,7 @@ class VLB(Loss[Distribution]):
         return batch.q.dkl(batch.p).where(t > 1, batch.p.nll(batch.x)).mean()
 ```
 
-Here, `batch.p` and `batch.q` represent $p_\theta(x_{t-1} | x_t)$ and $q(x_{t-1} | x_t, x_0)$, respectively. For a full list of `Batch` properties, check out the library's [API Reference](/modular-diffusion/docs/modules/loss-function#training-batch).
+Here, `batch.p` and `batch.q` represent $p_\theta(x_{t-1} | x_t)$ and $q(x_{t-1} | x_t, x_0)$, respectively. For a full list of `Batch` properties, check out the library's [API Reference](/modular-diffusion/modules/loss-function#training-batch).
 
 On the other hand, if you wish to train your model using a hybrid loss function that is a linear combination of two or more existing functions, you can do so without creating a new `Hybrid` module. For instance, to combine the `Simple` and `VLB` loss functions, as proposed in [Nichol & Dhariwal (2021)](https://arxiv.org/abs/2102.09672), you can use the following syntax.
 

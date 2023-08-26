@@ -75,7 +75,7 @@ save_image((z + 1) / 2, "output.png")
 
 And that's it! The image we just saved should look something like this:
 
-![Random numbers being generated from noise.](/modular-diffusion/docs/images/guides/getting-started/unconditional-linear.png)
+![Random numbers being generated from noise.](/modular-diffusion/images/guides/getting-started/unconditional-linear.png)
 
 > Tip
 >
@@ -98,7 +98,7 @@ model = diffusion.Model(
 
 By keeping the rest of the code the same, we end up with the following result:
 
-![Random numbers being generated from noise at a slower rate.](/modular-diffusion/docs/images/guides/getting-started/unconditional-cosine.png)
+![Random numbers being generated from noise at a slower rate.](/modular-diffusion/images/guides/getting-started/unconditional-cosine.png)
 
 You can see that, because we used the cosine schedule, the denoising process is more gradual compared to the previous example.
 
@@ -129,9 +129,9 @@ model = diffusion.Model(
 
 One final change we will be making compared to our previous example is to provide the labels of the images we wish to generate to the `sample` function. As an example, let's request one image of each digit by replacing `model.sample(batch=10)` with `model.sample(y=torch.arange(10))`. We then end up with the following image:
 
-![Numbers 0 through 9 being generated from noise.](/modular-diffusion/docs/images/guides/getting-started/conditional.png)
+![Numbers 0 through 9 being generated from noise.](/modular-diffusion/images/guides/getting-started/conditional.png)
 
-Pretty cool, uh? You can see how now we can choose which digit we sample from the model. This is, of course, only the tip of the iceberg. If you are looking more advanced conditioning techniques, such as the one used in [DALL·E 2](https://openai.com/dall-e-2), please refer to our [Image Generation Guide](/modular-diffusion/docs/guides/image-generation).
+Pretty cool, uh? You can see how now we can choose which digit we sample from the model. This is, of course, only the tip of the iceberg. If you are looking more advanced conditioning techniques, such as the one used in [DALL·E 2](https://openai.com/dall-e-2), please refer to our [Image Generation Guide](/modular-diffusion/guides/image-generation).
 
 ## Save and load the model
 
@@ -175,7 +175,7 @@ class Linear(Schedule):
         return torch.linspace(self.start, self.end, self.steps + 1)
 ```
 
-Given that `steps` is already a parameter in the base class, all we need to do is define `start` and `end` parameters, and use them to compute the $a_t$ values. Now you can use your custom module in your `diffusion.Model` just like you did with the prebuilt ones! For more detailed guidance on extending each module type check out our [Custom Modules Tutorial](/modular-diffusion/docs/guides/custom-modules).
+Given that `steps` is already a parameter in the base class, all we need to do is define `start` and `end` parameters, and use them to compute the $a_t$ values. Now you can use your custom module in your `diffusion.Model` just like you did with the prebuilt ones! For more detailed guidance on extending each module type check out our [Custom Modules Tutorial](/modular-diffusion/guides/custom-modules).
 
 Another neat feature of Modular Diffusion is it provides an intuitive way to combine existing modules without having to create new ones. For instance, sometimes you'll want to train the model on a hybrid loss function that is a linear combination of two or more functions. In their paper, [Nichol & Dhariwal (2021)](https://arxiv.org/abs/2102.09672) introduced such a loss function, which is a linear combination of the simple loss function proposed by [Ho et al. (2020)](https://arxiv.org/abs/2006.11239) and the [variational lower bound (VLB)](https://en.wikipedia.org/wiki/Evidence_lower_bound):
 

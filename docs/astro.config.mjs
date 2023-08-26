@@ -13,8 +13,8 @@ export default defineConfig({
     rehypePlugins: [rehypeKatex],
   },
   site: "https://cabralpinto.github.io",
-  base: "/modular-diffusion/docs",
+  base: "/modular-diffusion",
   redirects: {
-    "/": "/modular-diffusion/docs/guides/getting-started",
+    "/": "/modular-diffusion/guides/getting-started",
   },
 });
