@@ -34,11 +34,11 @@ class Categorical(Distribution):
         self.i = torch.eye(self.k, device=self.p.device)
 
     def sample(self) -> tuple[Tensor, None]:
-        index = torch.multinomial(self.p.view(-1, self.k), 1, True)
-        return self.i[index.view(*self.p.shape[:-1])], None
+        c = torch.multinomial(self.p.view(-1, self.k), 1, True)
+        return self.i[c.view(*self.p.shape[:-1])], None
 
     def nll(self, x: Tensor) -> Tensor:
-        return -(self.p * x).sum(-1).log()
+        return -((self.p * x).sum(-1) + 1e-6).log()
 
     def dkl(self, other: Self) -> Tensor:
         p1, p2 = self.p + 1e-6, other.p + 1e-6

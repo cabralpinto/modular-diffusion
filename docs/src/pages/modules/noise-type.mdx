@@ -1,0 +1,107 @@
+---
+id: 2.6
+title: "Noise Type"
+index: true
+---
+
+# {frontmatter.title}
+
+In Diffusion Models, a noise type defines a specific parametrization of the isotropic, prior, posterior, and approximate posterior distributions, $q(x_{T})$, $q(x_{t}|x_{0})$, $q(x_{t-1}|x_{t},x_{0})$, and $p_\theta(x_{t-1} | x_t)$, respectively. Modular Diffusion includes the standard `Gaussian` noise parametrization, as well as a few more noise types.
+
+## Gaussian noise
+
+Gaussian noise model introduced in [Ho et al. (2020)](https://arxiv.org/abs/2006.11239), for which the diffusion process is defined as:
+
+- $q(x_{T})=\mathcal{N}(x_T; 0, \text{I})$
+- $q(x_{t}|x_{0})=\mathcal{N}(x_{t};\sqrt{\bar{\alpha}_{t}}x_{t-1},(1 - \bar{\alpha}_{t})\text{I})$
+- $q(x_{t-1}|x_{t},x_{0})=\mathcal{N}(x_{t};\frac{\sqrt{\alpha_t}(1-\bar\alpha_{t-1})x_{t} + \sqrt{\bar\alpha_{t-1}}(1-\alpha_t)x_0}{1 -\bar\alpha_{t}},\frac{(1 - \alpha_t)(1 - \bar\alpha_{t-1})}{1 -\bar\alpha_{t}}\text{I})$
+- $p_\theta(x_{t-1} | x_t) = \mathcal{N}(x_{t};\hat{\mu}_\theta,\frac{(1 - \alpha_t)(1 - \bar\alpha_{t-1})}{1 -\bar\alpha_{t}}\text{I})$,
+
+where, depending on the parametrization:
+
+- $\hat{\mu}_\theta = \frac{\sqrt{\alpha_t}(1-\bar\alpha_{t-1})x_{t} + \sqrt{\bar\alpha_{t-1}}(1-\alpha_t)\hat{x}_\theta}{1 -\bar\alpha_{t}}$
+- $\hat{\mu}_\theta = \frac{1}{\sqrt{\alpha_t}}x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar\alpha_t}\sqrt{\alpha_t}}\hat{\epsilon}_\theta$.
+
+### Parameters
+
+- `parameter` (default `"x"`) -> Parameter to be learned and used to compute $\hat{\mu}_\theta$. If `"x"` ($\hat{x}_\theta$) or `"epsilon"` ($\hat{\epsilon}_\theta$) are chosen, $\hat{\mu}_\theta$ is computed using one of the formulas above. Selecting `"mu"` means that $\hat{\mu}_\theta$ is predicted directly. Typically, authors find that learning $\hat{\epsilon}_\theta$ leads to better results.
+- `variance` (default `"fixed"`) -> If `"fixed"`, the variance of $p_\theta(x_{t-1} | x_t)$ is fixed to $\frac{(1 - \alpha_t)(1 - \bar\alpha_{t-1})}{1 -\bar\alpha_{t}}\text{I}$. If `"learned"`, the variance is learned as a parameter of the model.
+
+> Parametrization
+>
+> If you have the option, always remember to select the same parameter both in your model's `Noise` and `Loss` objects.
+
+### Example
+
+```python
+from diffusion.noise import Gaussian
+
+noise = Gaussian(parameter="epsilon", variance="fixed")
+```
+
+### Visualization
+
+Applying `Gaussian` noise to an image using the `Linear` schedule with $T=1000$, $\alpha_0=0.9999$ and $\alpha_T=0.98$ in equally spaced snapshots:
+
+![Image of a dog getting noisier at a linear rate.](/modular-diffusion/docs/images/modules/noise-schedule/linear.png)
+
+## Uniform categorical noise
+
+Uniform categorical noise model introduced in [Austin et al. (2021)](https://arxiv.org/abs/2107.03006).
+
+- $q(x_T) = \mathrm{Cat}(x_T; \frac{\mathbb{1}\mathbb{1}^T}{K})$
+- $q(x_t | x_0) = \mathrm{Cat}(x_t; x_0\overline{Q}_t)$
+- $q(x_{t-1}|x_t, x_0) = \mathrm{Cat}\left(x_{t-1}; \frac{x_t Q_t^{\top} \odot  x_0 \overline{Q}_{t-1}}{x_0 \overline{Q}_t x_t^\top}\right)$
+- $p_\theta(x_{t-1} | x_t) = \mathrm{Cat}\left(x_{t-1}; \frac{x_t Q_t^{\top} \odot  \hat{x}_\theta \overline{Q}_{t-1}}{\hat{x}_\theta \overline{Q}_t x_t^\top}\right)$,
+
+where:
+
+- $\mathbb{1}$ is a column vector of ones of length $k$.
+- $Q_t = \alpha_t \text{I} + (1 - \alpha_t) \mathbb{1}\mathbb{1}^T$ 
+- $\overline{Q}_{t} = \bar{\alpha}_t \text{I} + (1 - \bar{\alpha}_t) \mathbb{1}\mathbb{1}^T$
+
+### Parameters
+
+- `k` -> Number of categories $k$.
+
+### Example
+
+```python
+from diffusion.noise import Uniform
+
+noise = Uniform(k=26)
+```
+
+## Absorbing categorical noise
+
+Absorbing categorical noise model introduced in [Austin et al. (2021)](https://arxiv.org/abs/2107.03006).
+
+- $q(x_T) = \mathrm{Cat}(x_T; \mathbb{1}e_m^T)$
+- $q(x_t | x_0) = \mathrm{Cat}(x_t; x_0\overline{Q}_t)$
+- $q(x_{t-1}|x_t, x_0) = \mathrm{Cat}\left(x_{t-1}; \frac{x_t Q_t^{\top} \odot  x_0 \overline{Q}_{t-1}}{x_0 \overline{Q}_t x_t^\top}\right)$
+- $p_\theta(x_{t-1} | x_t) = \mathrm{Cat}\left(x_{t-1}; \frac{x_t Q_t^{\top} \odot  \hat{x}_\theta \overline{Q}_{t-1}}{\hat{x}_\theta \overline{Q}_t x_t^\top}\right)$
+
+where 
+
+- $\mathbb{1}$ is a column vector of ones of length $k$.
+- $e_m$ is a vector with a 1 on
+the absorbing state $m$ and 0 elsewhere.
+- $Q_t = \alpha_t \text{I} + (1 - \alpha_t) \mathbb{1}e_m^T$ 
+- $\overline{Q}_{t} = \bar{\alpha}_t \text{I} + (1 - \bar{\alpha}_t) \mathbb{1}e_m^T$
+
+### Parameters
+
+- `k` -> Number of categories $k$.
+- `m` -> Absorbing state $m$.
+
+### Example
+
+```python
+from diffusion.noise import Uniform
+
+noise = Absorbing(k=27, m=26)
+```
+
+---
+
+*If you spot any typo or technical imprecision, please submit an issue or pull request to the library's [GitHub repository](https://github.com/cabralpinto/modular-diffusion).*

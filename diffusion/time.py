@@ -7,7 +7,7 @@ from .base import Time
 
 
 @dataclass
-class Uniform(Time):
+class Discrete(Time):
 
     def sample(self, steps: int, size: int) -> Tensor:
         return torch.randint(1, steps + 1, (size,))

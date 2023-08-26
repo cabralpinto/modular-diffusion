@@ -1,0 +1,39 @@
+---
+id: 2.9
+title: "Guidance"
+index: true
+---
+
+# {frontmatter.title}
+
+In Diffusion Models, guidance mechanisms control how much importance the model gives to the conditioning information, at the cost of sample diversity. The two most prevalent forms of guidance are **Classifier Guidance** and **Classifier-Free Guidance**. As of right now, Modular Diffusion only ships with the latter, **but will support both in an upcoming release.**
+
+## Classifier-free guidance
+
+Classifier-free guidance was introduced in [Ho & Salimans. (2022)](https://arxiv.org/abs/2207.12598) where it was found to produce higher fidelity samples in **conditional** Diffusion Models. It modifies the diffusion process as follows:
+
+- During **training**, a random subset of the batch labels are dropped, i.e., replaced with 0, before each epoch.
+- During **sampling**, predicted values $\hat{x}_\theta$ are computed according to $\hat{x}_\theta = (1 + s)\cdot\hat{x}_\theta(x_t|y) - s\cdot\hat{x}_\theta(x_t|0)$
+
+where $s$ is a scalar parameter that controls the strength of the guidance signal.
+
+### Parameters
+
+- `dropout` -> Percentage of labels dropped during training.
+- `strength` -> Strength of the guidance signal $s$.
+
+### Example
+
+```python
+from diffusion.guidance import ClassifierFree
+
+guidance = ClassifierFree(dropout=0.1, strength=2)
+```
+
+## Classifier guidance
+
+*This guidance module is currently in development.*
+
+---
+
+*If you spot any typo or technical imprecision, please submit an issue or pull request to the library's [GitHub repository](https://github.com/cabralpinto/modular-diffusion).*

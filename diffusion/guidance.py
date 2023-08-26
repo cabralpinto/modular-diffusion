@@ -1,17 +1,11 @@
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-__all__ = ["Base", "ClassifierFree"]
+from .base import Guidance
 
-
-class Base(ABC):
-
-    @abstractmethod
-    def __init__(self):
-        raise NotImplementedError
+__all__ = ["ClassifierFree"]
 
 
 @dataclass
-class ClassifierFree(Base):
+class ClassifierFree(Guidance):
     dropout: float
-    weight: float
+    scale: float

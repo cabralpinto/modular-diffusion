@@ -1,0 +1,38 @@
+---
+id: 2.1
+title: "diffusion.Model"
+index: true
+---
+
+# diffusion.Model
+
+## load()
+
+### Parameters
+
+- `path: str`: Path to model.
+
+## save()
+
+### Parameters
+
+- `path: str`: Path to model.
+
+## train()
+
+### Parameters
+
+- `epochs: int = 1`: Number of epochs.
+- `progress: bool = True`: Show progress bar.
+
+### Returns
+
+- `Iterator[float]`: Training losses.
+
+## sample()
+
+### Parameters
+
+- `y: Optional[Tensor] = None`: Labels for conditional sampling.
+- `batch: int = 1`: Batch size.
+- `progress: bool = True`: Show progress bar.

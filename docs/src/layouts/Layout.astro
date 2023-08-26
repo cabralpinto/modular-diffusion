@@ -1,0 +1,44 @@
+---
+import type { MarkdownLayoutProps } from "astro";
+import Article from "../components/Article.astro";
+import Header from "../components/Header.astro";
+import Index from "../components/Index.astro";
+import Sidebar from "../components/Sidebar.astro";
+import "../styles/fonts.css";
+
+type Props = MarkdownLayoutProps<{
+  title: string;
+  index: boolean;
+}>;
+
+const {
+  headings,
+  frontmatter: { title, index },
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html class="scroll-smooth scroll-pt-[5.5rem]" style="zoom: 105%" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="/modular-diffusion/docs/images/logo.ico">
+    <title>{title} | Modular Diffusion</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+      integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="flex flex-col text-gray-800">
+      <Header />
+      <Sidebar />
+      <div class="lg:ml-72 mt-12 sm:mt-14 flex justify-center">
+          <Article><slot /></Article>
+          {index ? <Index headings={headings}/> : ""}
+      </div>
+    </div>
+  </body>
+</html>

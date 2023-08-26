@@ -1,0 +1,37 @@
+---
+const articles = (await Astro.glob("../pages/[!_]*/*.mdx"))
+  .sort((a, b) => a.frontmatter.id - b.frontmatter.id)
+  .reduce<{ [key: string]: { title: string; href: string }[] }>(
+    (articles, article) => {
+      let group = article.file.split("/").slice(-2, -1)[0];
+      group = `${group[0].toUpperCase()}${group.slice(1)}`;
+      articles[group] = [
+        ...(articles[group] || []),
+        { title: article.frontmatter.title, href: article.url ?? "" },
+      ];
+      return articles;
+    },
+    {}
+  );
+---
+
+<nav
+  class="-ml-72 lg:ml-0 transition-[margin-left] lg:transition-none flex fixed mt-12 sm:mt-14 flex-col bg-white border-r h-full w-60 sm:w-72 px-7 sm:px-10 py-5 sm:py-8 space-y-4 sm:space-y-6 z-50"
+>
+  {
+    Object.entries(articles).map(([group, titles]) => (
+      <group class="text-sm">
+        <h1 class="font-medium mb-1">{group}</h1>
+        <ul>
+          {titles.map(({ title, href }) => (
+            <li class="text-gray-600 hover:text-gray-800 hover:font-medium transition-colors w-full">
+              <a class="block py-1" href={href}>
+                {title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </group>
+    ))
+  }
+</nav>

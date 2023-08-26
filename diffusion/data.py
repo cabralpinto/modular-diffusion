@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 import torch
 from torch import Tensor, nn
@@ -17,12 +18,13 @@ class Identity(Data):
 
 @dataclass
 class OneHot(Data):
-    k: int = 2
+    dimension: Optional[int] = None
 
     def __post_init__(self):
-        self.i = torch.eye(self.k)
+        self.i = torch.eye(self.dimension)
 
     def encode(self, w: Tensor) -> Tensor:
+        self.i = self.i.to(w.device) # TODO change
         return self.i[w]
 
     def decode(self, x: Tensor) -> Tensor:
@@ -31,15 +33,11 @@ class OneHot(Data):
 
 @dataclass
 class Embedding(Data):
-    k: int = 2
-    d: int = 256
+    count: Optional[int] = None
+    dimension: Optional[int] = None
 
     def __post_init__(self) -> None:
-        self.embedding = nn.Embedding(self.k, self.d)
-
-    @property
-    def shape(self) -> tuple[int]:
-        return (*self.x.shape[1:], self.d)
+        self.embedding = nn.Embedding(self.count, self.dimension)
 
     def encode(self, w: Tensor) -> Tensor:
         return self.embedding(w)

@@ -1,11 +1,14 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from itertools import chain
 from typing import Any, Callable, Generic, Iterator, Optional, TypeVar
 
 import torch
 import torch.nn as nn
 from torch import Tensor
 from typing_extensions import Self
+
+from .utils.nn import Sequential
 
 __all__ = ["Batch", "Data", "Distribution", "Loss", "Net", "Noise", "Schedule", "Time"]
 
@@ -53,29 +56,33 @@ class Batch(Generic[D]):
 
 @dataclass
 class Data(ABC):
-    x: Tensor
+    w: Tensor
     y: Optional[Tensor] = None
     batch: int = 1
     shuffle: bool = False
-
+    
     @property
-    def shape(self) -> tuple[int]:
-        return self.x.shape[1:]
+    def shape(self) -> tuple[int, ...]:
+        return self.encode(self.w[:1]).shape[1:]
+
+    def parameters(self) -> Iterator[nn.Parameter]:
+        return chain.from_iterable(
+            var.parameters() for var in vars(self) if isinstance(var, nn.Module))
 
     def __iter__(self) -> Iterator[tuple[Tensor, Tensor]]:
         if self.y is None:
-            self.y = torch.zeros(self.x.shape[0], dtype=torch.int)
+            self.y = torch.zeros(self.w.shape[0], dtype=torch.int)
         if self.shuffle:
-            index = torch.randperm(self.x.shape[0])
-            self.x, self.y = self.x[index], self.y[index]
-        self.data = zip(self.x.split(self.batch), self.y.split(self.batch))
+            index = torch.randperm(self.w.shape[0])
+            self.w, self.y = self.w[index], self.y[index]
+        self.data = zip(self.w.split(self.batch), self.y.split(self.batch))
         return self
 
     def __next__(self) -> tuple[Tensor, Tensor]:
         return next(self.data)
 
     def __len__(self) -> int:
-        return self.x.shape[0] // self.batch
+        return -(self.w.shape[0] // -self.batch)
 
     @abstractmethod
     def encode(self, w: Tensor) -> Tensor:
@@ -92,9 +99,6 @@ class Time(ABC):
     def sample(self, steps: int, size: int) -> Tensor:
         raise NotImplementedError
 
-    def __call__(self, steps: int, size: int) -> Tensor:
-        return self.sample(steps, size)
-
 
 @dataclass
 class Schedule(ABC):
@@ -102,6 +106,7 @@ class Schedule(ABC):
 
     @abstractmethod
     def compute(self) -> Tensor:
+        """Compute the diffusion schedule alpha_t for t = 0, ..., T"""
         raise NotImplementedError
 
 
@@ -110,22 +115,27 @@ class Noise(ABC, Generic[D]):
 
     @abstractmethod
     def schedule(self, alpha: Tensor) -> None:
+        """Precompute needed resources based on the diffusion schedule"""
         raise NotImplementedError
 
     @abstractmethod
-    def isotropic(self, *shape: int) -> D:
+    def isotropic(self, shape: tuple[int, ...]) -> D:
+        """Compute the isotropic distribution q(x_T)"""
         raise NotImplementedError
 
     @abstractmethod
     def prior(self, x: Tensor, t: Tensor) -> D:
+        """Compute the prior distribution q(x_t | x_0)"""
         raise NotImplementedError
 
     @abstractmethod
     def posterior(self, x: Tensor, z: Tensor, t: Tensor) -> D:
+        """Compute the posterior distribution q(x_{t-1} | x_t, x_0)"""
         raise NotImplementedError
 
     @abstractmethod
     def approximate(self, z: Tensor, t: Tensor, hat: Tensor) -> D:
+        """Compute the approximate posterior distribution p(x_{t-1} | x_t)"""
         raise NotImplementedError
 
 
@@ -135,6 +145,9 @@ class Net(ABC, nn.Module):
     @abstractmethod
     def forward(self, x: Tensor, y: Tensor, t: Tensor) -> Tensor:
         raise NotImplementedError
+
+    def __or__(self, module: nn.Module) -> "Net":
+        return Sequential(self, module)  # type: ignore
 
 
 class Guidance(ABC):
@@ -146,9 +159,6 @@ class Loss(ABC, Generic[D]):
     @abstractmethod
     def compute(self, batch: Batch[D]) -> Tensor:
         raise NotImplementedError
-
-    def __call__(self, batch: Batch[D]) -> Tensor:
-        return self.compute(batch)
 
     def __mul__(self, factor: float) -> "Mul[D]":
         return Mul(factor, self)

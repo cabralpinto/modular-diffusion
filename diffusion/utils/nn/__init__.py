@@ -6,17 +6,13 @@ from torch.nn import Conv2d, Module, Parameter
 from torch.nn import Sequential as _Sequential
 from torch.nn.functional import conv2d
 
-__all__ = ["FastGELU", "Lambda", "Sequential", "WeightStandardizedConv2d"]
-
-
-class Lambda(Module):
-
-    def __init__(self, function: Callable[..., Any]):
-        super().__init__()
-        self.function = function
-
-    def forward(self, *input: Any):  # type: ignore
-        return self.function(*input)
+__all__ = [
+    "FastGELU",
+    "Lambda",
+    "WeightStdConv2d",
+    "Swish",
+    "SinusoidalPositionalEmbedding",
+]
 
 
 class Sequential(_Sequential):
@@ -30,13 +26,17 @@ class Sequential(_Sequential):
         return input
 
 
-class Residual(Sequential):
+class Lambda(Module):
 
-    def forward(self, *input: Any | Tensor) -> Any | Tensor:
-        return super().forward(*input) + input[0]
+    def __init__(self, function: Callable[..., Any]):
+        super().__init__()
+        self.function = function
+
+    def forward(self, *input: Any):  # type: ignore
+        return self.function(*input)
 
 
-class WeightStandardizedConv2d(Conv2d):
+class WeightStdConv2d(Conv2d):
 
     def forward(self, input: Tensor) -> Tensor:
         mean = self.weight.mean((1, 2, 3), keepdim=True)
@@ -58,7 +58,7 @@ class SinusoidalPositionalEmbedding(Module):
         super().__init__()
         self.w = Parameter(base**torch.arange(0, -1, -2 / size)[None])
 
-    def forward(self, t: Tensor) -> Tensor:  # type: ignore
+    def forward(self, t: Tensor) -> Tensor:
         wt = self.w * t[:, None]
         return torch.stack((wt.sin(), wt.cos()), 2).flatten(1)
 
@@ -67,3 +67,9 @@ class FastGELU(Module):
 
     def forward(self, x: Tensor) -> Tensor:
         return x * torch.sigmoid(1.702 * x)
+
+
+class Swish(Module):
+
+    def forward(self, x: Tensor) -> Tensor:
+        return x * torch.sigmoid(x)

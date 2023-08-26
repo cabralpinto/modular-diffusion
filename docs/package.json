@@ -1,0 +1,26 @@
+{
+  "name": "",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev --host",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^0.19.7",
+    "@astrojs/tailwind": "^4.0.0",
+    "@fontsource/roboto": "^5.0.8",
+    "astro": "^2.10.1",
+    "tailwindcss": "^3.3.3",
+    "tailwindcss-opentype": "^1.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.9",
+    "rehype-katex": "^6.0.3",
+    "remark-math": "^5.1.1",
+    "sass": "^1.65.1"
+  }
+}

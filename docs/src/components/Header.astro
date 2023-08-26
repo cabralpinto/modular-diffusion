@@ -1,0 +1,38 @@
+<header
+  class="fixed w-full bg-white flex items-center border-b h-12 sm:h-14 px-7 sm:px-10 z-50 text-sm sm:text-base"
+>
+  <img
+    src="/modular-diffusion/docs/images/menu.svg"
+    class="toggle lg:hidden h-7 hover:scale-y-110 transition-[transform] -ml-1.5 mr-4 sm:mr-6 cursor-pointer"
+    alt="Menu"
+  />
+  <a class="flex items-center" href="/modular-diffusion/docs/">
+    <img class="mr-3 rounded-md" src="/modular-diffusion/docs/images/logo.png" alt="Logo" />
+    Modular Diffusion
+  </a>
+  <div class="grow"></div>
+  <a
+    class="hover:underline"
+    href="https://github.com/cabralpinto/modular-diffusion">GitHub</a
+  >
+  <a
+    class="ml-4 sm:ml-6 hover:underline"
+    href="https://pypi.org/project/modular-diffusion/">PyPI</a
+  >
+</header>
+
+<script>
+  const toggle = document.querySelector(".toggle");
+  const nav = document.querySelector("nav");
+  const article = document.querySelector("article");
+  toggle?.addEventListener("click", () => {
+    nav?.classList.toggle("-ml-72");
+    nav?.classList.toggle("ml-0");
+    article?.classList.toggle("blur-sm");
+  });
+  article?.addEventListener("click", () => {
+    nav?.classList.add("-ml-72");
+    nav?.classList.remove("ml-0");
+    article?.classList.remove("blur-sm");
+  });
+</script>
