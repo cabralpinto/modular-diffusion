@@ -111,10 +111,9 @@ class Model(Generic[D]):
             t = torch.full((batch,), t, device=self.device)
             hat = self.net(z, y, t)
             if isinstance(self.guidance, guidance.ClassifierFree):
-                s = self.guidance.scale
+                s = self.guidance.strength
                 hat = (1 + s) * hat - s * self.net(z, torch.zeros_like(y), t)
             z, _ = self.noise.approximate(z, t, hat).sample()
-            # print(z.min().item(), z.max().item(), flush=True)
             w = self.data.decode(z)
             l = torch.cat((l, w[None]), 0)
             bar.update()

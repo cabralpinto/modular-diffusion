@@ -8,4 +8,4 @@ __all__ = ["ClassifierFree"]
 @dataclass
 class ClassifierFree(Guidance):
     dropout: float
-    scale: float
+    strength: float

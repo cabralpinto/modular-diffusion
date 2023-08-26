@@ -4,7 +4,7 @@ from pathlib import Path
 
 import torch
 from einops import rearrange
-from torchvision.datasets import ImageFolder # , CIFAR10 
+from torchvision.datasets import ImageFolder
 from torchvision.transforms import ToTensor
 from torchvision.transforms.functional import resize
 from torchvision.utils import save_image
@@ -43,14 +43,12 @@ c, h, w, p, q = 3, 64, 64, 2, 2
 x, _ = zip(*ImageFolder(str(input), ToTensor()))
 x = torch.stack(x) * 2 - 1
 x = resize(x, [h, w], antialias=False)
-# x, y = zip(*CIFAR10(str(input), transform=ToTensor(), download=True))
-# x, y = torch.stack(x) * 2 - 1, torch.tensor(y) + 1
 x = rearrange(x, "b c (h p) (w q) -> b (h w) (c p q)", p=p, q=q)
 
 model = diffusion.Model(
     data=Identity(x, batch=16, shuffle=True),
     schedule=Cosine(1000),
-    noise=Gaussian(parameter="epsilon", variance="fixed"),  # TODO test variance
+    noise=Gaussian(parameter="epsilon", variance="fixed"),
     net=Transformer(input=x.shape[2], width=768, depth=12, heads=12),
     loss=Simple(parameter="epsilon"),
     device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),

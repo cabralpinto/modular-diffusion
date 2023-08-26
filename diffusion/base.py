@@ -46,7 +46,6 @@ class Batch(Generic[D]):
     l: Tensor = field(init=False)
 
     def __setattr__(self, prop: str, val: Any):
-        # TODO test difference in speed if only doing necessary conversions
         if isinstance(val, Tensor):
             if hasattr(self, prop):
                 del self.__dict__[prop]

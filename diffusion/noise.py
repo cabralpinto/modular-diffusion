@@ -53,7 +53,7 @@ class Gaussian(Noise[N]):
         # mu =  + self.p2[t] * hat[0]
         # print(z.min().item(), z.max().item(), flush=True)
         # print(self.p1[t].min().item(), self.p1[t].max().item(), flush=True)
-        
+
         # x = (z - (1 - self.delta[t]) * hat[0]) / self.delta[t].sqrt()
         # print(x.min().item(), x.max().item(), flush=True)
         # if self.parameter == "epsilon":
@@ -61,18 +61,18 @@ class Gaussian(Noise[N]):
         # else:
         #     x = hat[0]
         # print(x.min().item(), x.max().item(), flush=True)
-        
-        
+
         return N(
             self.p1[t] * z + self.p2[t] * hat[0],
-            self.q5[t] if self.variance == "fixed" else
-            torch.exp(hat[1] * self.p3[t] + (1 - hat[1]) * self.p4[t])
-            if self.variance == "range" else hat[1],
+            self.q5[t]
+            if self.variance == "fixed"
+            else torch.exp(hat[1] * self.p3[t] + (1 - hat[1]) * self.p4[t])
+            if self.variance == "range"
+            else hat[1],
         )
 
 
 class Categorical(Noise[Cat]):
-
     @abstractmethod
     def q(self, t: Tensor) -> Tensor:
         raise NotImplementedError
@@ -85,15 +85,17 @@ class Categorical(Noise[Cat]):
         return Cat(x @ self.r(t))
 
     def posterior(self, x: Tensor, z: Tensor, t: Tensor) -> Cat:
-        return Cat((z @ self.q(t).transpose(1, 2)) * (x @ self.r(t - 1)) /
-                   (x @ self.r(t) * z).sum(2, keepdim=True))
+        return Cat(
+            (z @ self.q(t).transpose(1, 2))
+            * (x @ self.r(t - 1))
+            / (x @ self.r(t) * z).sum(2, keepdim=True)
+        )
 
     def approximate(self, z: Tensor, t: Tensor, hat: Tensor) -> Cat:
         return self.posterior(hat[0], z, t)
 
 
 class MemoryInefficientCategorical(Categorical):
-
     def schedule(self, alpha: Tensor) -> None:
         self._q = self.transition(alpha)
         self._r = torch.stack([*accumulate(self._q, torch.mm)])
@@ -131,7 +133,6 @@ class MemoryEfficientCategorical(Categorical):
 
 
 class Uniform(MemoryEfficientCategorical):
-
     @property
     def a(self) -> Tensor:
         return torch.ones(self.k, self.k, device=self.i.device) / self.k
@@ -139,9 +140,10 @@ class Uniform(MemoryEfficientCategorical):
     def isotropic(self, shape: tuple[int, ...]) -> Cat:
         return Cat(torch.full(shape, 1 / self.k))
 
+
 @dataclass
-class Absorbing(MemoryEfficientCategorical): 
-    m: int
+class Absorbing(MemoryEfficientCategorical):
+    m: int = -1
 
     @property
     def a(self) -> Tensor:

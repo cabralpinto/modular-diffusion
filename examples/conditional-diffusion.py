@@ -13,7 +13,7 @@ import diffusion
 from diffusion.data import Identity
 from diffusion.guidance import ClassifierFree
 from diffusion.loss import Simple
-from diffusion.net import UNet, Transformer
+from diffusion.net import UNet
 from diffusion.noise import Gaussian
 from diffusion.schedule import Cosine
 
@@ -32,7 +32,7 @@ model = diffusion.Model(
     schedule=Cosine(steps=1000),
     noise=Gaussian(parameter="epsilon", variance="fixed"),
     net=UNet(channels=(1, 64, 128, 256), labels=10),
-    guidance=ClassifierFree(dropout=0.1, scale=2),
+    guidance=ClassifierFree(dropout=0.1, strength=2),
     loss=Simple(parameter="epsilon"),
     device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
 )
