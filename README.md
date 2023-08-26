@@ -1,13 +1,13 @@
 # Modular Diffusion
 
-Welcome to Modular Diffusion! This package provides an easy-to-use and extendable API to train generative diffusion models from scratch. It is designed with flexibility and modularity in mind, allowing you to quickly build your own diffusion models by plugging in different components.
+Modular Diffusion provides an easy-to-use modular API to design and train custom Diffusion Models with PyTorch.
 
 > **Warning**: The code for Modular Diffusion is not yet available on PyPI, as it is still undergoing significant development. A stable release will be published there once the code base, unit tests, and documentation reach a satisfactory state of completion. Stay tuned for more updates, and thank you for your patience!
 
 ## Features
 - ⚙️ **Highly Modular Design**: Tailor and build your own diffusion models by leveraging our flexible `Model` class. This class allows you to choose and implement various components of the diffusion process such as noise type, schedule type, denoising network, and loss function.
 - 📚 **Growing Library of Pre-built Modules**: Get started right away with our comprehensive selection of pre-built modules.
-- 🔨 **Custom Module Creation Made Easy**: Craft your own unique modules with ease. Just inherit from the base class of your chosen module type and get creative!
+- 🔨 **Custom Module Creation Made Easy**: Craft your own original modules by inheriting from a base class and implementing the required methods.
 - 🤝 **Seamless Integration with PyTorch**: This project harmoniously integrates with PyTorch, allowing users to leverage the plethora of features and community support the framework has to offer.
 - 🌈 **Broad Range of Applications**: From generating high-quality images to implementing non-autoregressive audio and text synthesis pipelines, the potential uses of Modular Diffusion are vast.
 
@@ -39,7 +39,7 @@ With Modular Diffusion, you can build and train a custom Diffusion Model in just
 
    ```python
    losses = [*model.train(epochs=10)]
-   z = model.sample(torch.arange(10))
+   z = model.sample(torch.arange(1, 11))
    z = z[torch.linspace(0, z.shape[0] - 1, 10).long()]
    z = rearrange(z, "t b c h w -> c (b h) (t w)")
    save_image((z + 1) / 2, "output.png")
