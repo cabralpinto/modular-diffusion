@@ -22,12 +22,12 @@ Constant noise schedule given by $\alpha_t = k$.
 ```python
 from diffusion.schedule import Constant
 
-schedule = Constant(1000, 0.01)
+schedule = Constant(1000, 0.995)
 ```
 
 ### Visualization
 
-Applying `Gaussian` noise to an image using the `Constant` schedule with $T=1000$ and $k=0.01$ in equally spaced snapshots:
+Applying `Gaussian` noise to an image using the `Constant` schedule with $T=1000$ and $k=0.995$ in equally spaced snapshots:
 
 ![Image of a dog getting noisier at a constant rate.](/modular-diffusion/images/modules/noise-schedule/constant.png)
 

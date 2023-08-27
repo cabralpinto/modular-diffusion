@@ -41,9 +41,9 @@ noise = Gaussian(parameter="epsilon", variance="fixed")
 
 ### Visualization
 
-Applying `Gaussian` noise to an image using the `Linear` schedule with $T=1000$, $\alpha_0=0.9999$ and $\alpha_T=0.98$ in equally spaced snapshots:
+Applying `Gaussian` noise to an image using the `Cosine` schedule with $T=1000$, $s=8e-3$ and $e=2$ in equally spaced snapshots:
 
-![Image of a dog getting noisier at a linear rate.](/modular-diffusion/images/modules/noise-schedule/linear.png)
+![Image of a dog gradually turning noisy.](/modular-diffusion/images/modules/noise-type/gaussian.png)
 
 ## Uniform categorical noise
 
@@ -60,6 +60,10 @@ where:
 - $Q_t = \alpha_t \text{I} + (1 - \alpha_t) \mathbb{1}\mathbb{1}^T$ 
 - $\overline{Q}_{t} = \bar{\alpha}_t \text{I} + (1 - \bar{\alpha}_t) \mathbb{1}\mathbb{1}^T$
 
+> One-hot representation
+>
+> The `Uniform` noise type operates on one-hot vectors. To use it, you must use the `OneHot` data transform.
+
 ### Parameters
 
 - `k` -> Number of categories $k$.
@@ -71,6 +75,12 @@ from diffusion.noise import Uniform
 
 noise = Uniform(k=26)
 ```
+
+### Visualization
+
+Applying `Uniform` noise to an image with $k=255$ using the `Cosine` schedule with $T=1000$, $s=8e-3$ and $e=2$ in equally spaced snapshots:
+
+![Image of a dog gradually turning noisy.](/modular-diffusion/images/modules/noise-type/uniform.png)
 
 ## Absorbing categorical noise
 
@@ -89,6 +99,10 @@ the absorbing state $m$ and 0 elsewhere.
 - $Q_t = \alpha_t \text{I} + (1 - \alpha_t) \mathbb{1}e_m^T$ 
 - $\overline{Q}_{t} = \bar{\alpha}_t \text{I} + (1 - \bar{\alpha}_t) \mathbb{1}e_m^T$
 
+> One-hot representation
+>
+> The `Absorbing` noise type operates on one-hot vectors. To use it, you must use the `OneHot` data transform.
+
 ### Parameters
 
 - `k` -> Number of categories $k$.
@@ -99,8 +113,14 @@ the absorbing state $m$ and 0 elsewhere.
 ```python
 from diffusion.noise import Uniform
 
-noise = Absorbing(k=27, m=26)
+noise = Absorbing(k=255, m=128)
 ```
+
+### Visualization
+
+Applying `Absorbing` noise to an image with $k=255$ and $m=128$ using the `Cosine` schedule with $T=1000$, $s=8e-3$ and $e=2$ in equally spaced snapshots:
+
+![Image of a dog gradually turning gray.](/modular-diffusion/images/modules/noise-type/absorbing.png)
 
 ---
 

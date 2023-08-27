@@ -35,7 +35,7 @@ x, _ = zip(*MNIST("data", download=True, transform=ToTensor()))
 x = torch.stack(x) * 2 - 1
 ```
 
-Let's build our Diffusion Model next. Modular Diffusion provides you with the `diffusion.Model` class, which takes as parameters a **data transformation**, a **noise schedule**, a **noise type**, a **denoiser neural network**, and a **loss function**, along with other optional parameters. You can import prebuilt components for these parameters from the different modules inside Modular Diffusion or build your own. Let's take a look at a simple example which replicates the architecture introduced in [Ho et al. (2020)](https://arxiv.org/abs/2006.11239), using only prebuilt components:
+Let's build our Diffusion Model next. Modular Diffusion provides you with the `diffusion.Model` class, which takes as parameters a **data transform**, a **noise schedule**, a **noise type**, a **denoiser neural network**, and a **loss function**, along with other optional parameters. You can import prebuilt components for these parameters from the different modules inside Modular Diffusion or build your own. Let's take a look at a simple example which replicates the architecture introduced in [Ho et al. (2020)](https://arxiv.org/abs/2006.11239), using only prebuilt components:
 
 ```python
 import diffusion
@@ -111,7 +111,7 @@ x, y = zip(*MNIST(str(input), transform=ToTensor(), download=True))
 x, y = torch.stack(x) * 2 - 1, torch.tensor(y) + 1
 ```
 
-Once again, let's assemble our Diffusion Model. This time, we will add the labels `y` in our data transformation object and provide the number of labels to our denoiser network. Let's also add classifier-free guidance to the model, a technique introduced in [Ho et al. (2022)](https://arxiv.org/abs/2207.12598) to improve sample quality in conditional generation, at the cost of extra sample time and less sample variety.
+Once again, let's assemble our Diffusion Model. This time, we will add the labels `y` in our data transform object and provide the number of labels to our denoiser network. Let's also add classifier-free guidance to the model, a technique introduced in [Ho et al. (2022)](https://arxiv.org/abs/2207.12598) to improve sample quality in conditional generation, at the cost of extra sample time and less sample variety.
 
 ```python
 from diffusion.guidance import ClassifierFree

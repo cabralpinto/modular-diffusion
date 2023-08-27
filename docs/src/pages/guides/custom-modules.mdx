@@ -14,11 +14,11 @@ When tinkering with Diffusion Models, the time will come when you need to ventur
 >
 > As with all library code, this tutorial adheres to strict type checking standards. Although we recommend typing your code, you may elect to avoid writing type annotations. By skipping this step, however, you will not receive a warning if you try to mix incompatible modules, or other useful intellisense.
 
-## Data transformation
+## Data transform
 
-In many Diffusion Model applications, the diffusion process takes place in the dataset space. If this is your case, the prebuilt `Identity` data transformation module will serve your purposes, leaving your data untouched before applying noise during training. However, a growing number of algorithms, like [Stable Diffusion](https://arxiv.org/abs/2112.10752) and [Diffusion-LM](https://arxiv.org/abs/2205.14217), project data onto a latent space before applying diffusion. 
+In many Diffusion Model applications, the diffusion process takes place in the dataset space. If this is your case, the prebuilt `Identity` data transform module will serve your purposes, leaving your data untouched before applying noise during training. However, a growing number of algorithms, like [Stable Diffusion](https://arxiv.org/abs/2112.10752) and [Diffusion-LM](https://arxiv.org/abs/2205.14217), project data onto a latent space before applying diffusion. 
 
-In the case of Diffusion-LM, the dataset consists of sequences of word IDs, but the diffusion process happens in the word embedding space. This means you need a way of converting sequences of word IDs into sequences of embeddings, and train the embeddings along with the Diffusion Model. In Modular Diffusion, this can be achieved by extending the `Data` base class and implement its `encode` and `decode` methods. The former projects the data into the latent space and the latter retrieves it to the dataset space. Let's take a look at how you could implement the aforementioned transformation:
+In the case of Diffusion-LM, the dataset consists of sequences of word IDs, but the diffusion process happens in the word embedding space. This means you need a way of converting sequences of word IDs into sequences of embeddings, and train the embeddings along with the Diffusion Model. In Modular Diffusion, this can be achieved by extending the `Data` base class and implement its `encode` and `decode` methods. The former projects the data into the latent space and the latter retrieves it to the dataset space. Let's take a look at how you could implement the aforementioned transform:
 
 ```python
 from diffusion.base import Data
@@ -40,7 +40,7 @@ class Embedding(Data):
 
 In the `encode` method, we are transforming the input tensor `w` into an embedding tensor using the learned embedding layer. The `decode` method reverses this operation, by finding the most similar embedding in the embedding weight matrix to each vector in `x`.
 
-Data transformations can also be useful in cases where they have no trainable parameters. For example, the `Categorical` noise module operates over one-hot vectors, which are very memory-inneficient. To mitigate this, you may store your data as a list of labels and use the `OneHot` data transformation module to transform it into one-hot vectors on a batch-by-batch basis, saving you a lot of memory. Or your data transformation can just be a frozen variational autoencoder, like in [Stable Diffusion](https://arxiv.org/abs/2112.10752). For further details, check out our [Text Generation](/modular-diffusion/guides/text-generation) and [Image Generation](/modular-diffusion/guides/image-generation) tutorials.
+Data transforms can also be useful in cases where they have no trainable parameters. For example, the `Categorical` noise module operates over one-hot vectors, which are very memory-inneficient. To mitigate this, you may store your data as a list of labels and use the `OneHot` data transform module to transform it into one-hot vectors on a batch-by-batch basis, saving you a lot of memory. Or your data transform can just be a frozen variational autoencoder, like in [Stable Diffusion](https://arxiv.org/abs/2112.10752). For further details, check out our [Text Generation](/modular-diffusion/guides/text-generation) and [Image Generation](/modular-diffusion/guides/image-generation) tutorials.
 
 ## Noise schedule
 
