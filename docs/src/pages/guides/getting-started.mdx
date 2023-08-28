@@ -51,7 +51,7 @@ model = diffusion.Model(
     noise=Gaussian(parameter="epsilon", variance="fixed"),
     net=UNet(channels=(1, 64, 128, 256)),
     loss=Simple(parameter="epsilon"),
-    device=torch.device("cuda"),
+    device="cuda",
 )
 ```
 
@@ -92,7 +92,7 @@ model = diffusion.Model(
     noise=Gaussian(parameter="epsilon", variance="fixed"),
     net=UNet(channels=(1, 64, 128, 256)),
     loss=Simple(parameter="epsilon"),
-    device=torch.device("cuda"),
+    device="cuda",
 )
 ```
 
@@ -123,7 +123,7 @@ model = diffusion.Model(
     net=UNet(x.shape[2], labels=10), # added labels here!
     loss=Simple(parameter="epsilon"),
     guidance=ClassifierFree(weight=0.8, dropout=0.1), # added classifier guidance!
-    device=torch.device("cuda"),
+    device="cuda",
 )
 ```
 
@@ -197,7 +197,3 @@ from torch.nn import Softmax
 
 net = Transformer(input=512) | Softmax(2)
 ```
-
----
-
-*If you spot any typo or technical imprecision, please submit an issue or pull request to the library's [GitHub repository](https://github.com/cabralpinto/modular-diffusion).*

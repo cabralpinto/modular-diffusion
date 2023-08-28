@@ -6,7 +6,7 @@ index: true
 
 # {frontmatter.title}
 
-In Diffusion Models, a noise type defines a specific parametrization of the isotropic, prior, posterior, and approximate posterior distributions, $q(x_{T})$, $q(x_{t}|x_{0})$, $q(x_{t-1}|x_{t},x_{0})$, and $p_\theta(x_{t-1} | x_t)$, respectively. Modular Diffusion includes the standard `Gaussian` noise parametrization, as well as a few more noise types.
+In Diffusion Models, a noise type defines a specific parametrization of the stationary, prior, posterior, and approximate posterior distributions, $q(x_{T})$, $q(x_{t}|x_{0})$, $q(x_{t-1}|x_{t},x_{0})$, and $p_\theta(x_{t-1} | x_t)$, respectively. Modular Diffusion includes the standard `Gaussian` noise parametrization, as well as a few more noise types.
 
 ## Gaussian noise
 
@@ -47,7 +47,7 @@ Applying `Gaussian` noise to an image using the `Cosine` schedule with $T=1000$,
 
 ## Uniform categorical noise
 
-Uniform categorical noise model introduced in [Austin et al. (2021)](https://arxiv.org/abs/2107.03006).
+Uniform categorical noise model introduced in [Austin et al. (2021)](https://arxiv.org/abs/2107.03006). In each time step, each token either stays the same or transitions to a different state. The noise type is defined by:
 
 - $q(x_T) = \mathrm{Cat}(x_T; \frac{\mathbb{1}\mathbb{1}^T}{K})$
 - $q(x_t | x_0) = \mathrm{Cat}(x_t; x_0\overline{Q}_t)$
@@ -84,12 +84,12 @@ Applying `Uniform` noise to an image with $k=255$ using the `Cosine` schedule wi
 
 ## Absorbing categorical noise
 
-Absorbing categorical noise model introduced in [Austin et al. (2021)](https://arxiv.org/abs/2107.03006).
+Absorbing categorical noise model introduced in [Austin et al. (2021)](https://arxiv.org/abs/2107.03006). In each time step, each token either stays the same or transitions to an absorbing state. The noise type is defined by:
 
 - $q(x_T) = \mathrm{Cat}(x_T; \mathbb{1}e_m^T)$
 - $q(x_t | x_0) = \mathrm{Cat}(x_t; x_0\overline{Q}_t)$
 - $q(x_{t-1}|x_t, x_0) = \mathrm{Cat}\left(x_{t-1}; \frac{x_t Q_t^{\top} \odot  x_0 \overline{Q}_{t-1}}{x_0 \overline{Q}_t x_t^\top}\right)$
-- $p_\theta(x_{t-1} | x_t) = \mathrm{Cat}\left(x_{t-1}; \frac{x_t Q_t^{\top} \odot  \hat{x}_\theta \overline{Q}_{t-1}}{\hat{x}_\theta \overline{Q}_t x_t^\top}\right)$
+- $p_\theta(x_{t-1} | x_t) = \mathrm{Cat}\left(x_{t-1}; \frac{x_t Q_t^{\top} \odot  \hat{x}_\theta \overline{Q}_{t-1}}{\hat{x}_\theta \overline{Q}_t x_t^\top}\right)$,
 
 where 
 
@@ -121,7 +121,3 @@ noise = Absorbing(k=255, m=128)
 Applying `Absorbing` noise to an image with $k=255$ and $m=128$ using the `Cosine` schedule with $T=1000$, $s=8e-3$ and $e=2$ in equally spaced snapshots:
 
 ![Image of a dog gradually turning gray.](/modular-diffusion/images/modules/noise-type/absorbing.png)
-
----
-
-*If you spot any typo or technical imprecision, please submit an issue or pull request to the library's [GitHub repository](https://github.com/cabralpinto/modular-diffusion).*

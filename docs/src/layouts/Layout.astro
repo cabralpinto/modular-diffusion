@@ -22,7 +22,11 @@ const {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="/modular-diffusion/images/logo.ico">
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/modular-diffusion/images/logo.ico"
+    />
     <title>{title} | Modular Diffusion</title>
     <link
       rel="stylesheet"
@@ -36,8 +40,27 @@ const {
       <Header />
       <Sidebar />
       <div class="lg:ml-72 mt-12 sm:mt-14 flex justify-center">
-          <Article><slot /></Article>
-          {index ? <Index headings={headings}/> : ""}
+        <Article>
+          <slot />
+          {
+            index && (
+              <>
+                <hr />
+                <p>
+                  <em>
+                    If you spot any typo or technical imprecision, please submit
+                    an issue or pull request to the library's
+                    <a href="https://github.com/cabralpinto/modular-diffusion">
+                      GitHub repository
+                    </a>
+                    .
+                  </em>
+                </p>
+              </>
+            )
+          }
+        </Article>
+        {index ? <Index headings={headings} /> : ""}
       </div>
     </div>
   </body>

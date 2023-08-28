@@ -95,7 +95,7 @@ class Normal(Distribution):
 In most Diffusion Model applications, the standard choice of noise is Gaussian, which is already bundled within the library. However, there may be scenarios where you want to experiment with variations of the standard Gaussian noise, as in DDIM introduced in [Song et al. 2020](https://arxiv.org/abs/2010.02502), or venture into entirely different noise types, like the one used in D3PM, introduced in [Austin et al. (2021)](https://arxiv.org/abs/2107.03006). To create your own unique noise behavior, you will need to extend the abstract `Noise` base class, and implement each one of the following methods:
 
 - `schedule(self, alpha: Tensor) -> None`: This method is intended for precomputing resources based on the noise schedule $\alpha_t$ for $t \in {0,\dots,T}$. This can be beneficial for performance reasons when some calculations can be done ahead of time. A common use is calculating $\bar{\alpha}_{t}=\prod_{t=1}^{T}\alpha_{t}$.
-- `isotropic(self, shape: tuple[int, ...]) -> Distribution`: This method is tasked with computing the isotropic distribution $q(x_T)$, i.e., the noise distribution at the final time step, given a target shape.
+- `stationary(self, shape: tuple[int, ...]) -> Distribution`: This method is tasked with computing the stationary distribution $q(x_T)$, i.e., the noise distribution at the final time step, given a target shape.
 - `prior(self, x: Tensor, t: Tensor) -> Distribution`: This method computes the prior distribution $q(x_t | x_0)$, i.e., the distribution of the noisy images $x_t$ or `z`  given the initial image $x_0$ or `x`.
 - `posterior(self, x: Tensor, z: Tensor, t: Tensor) -> Distribution`: This method computes the posterior distribution $q(x_{t-1} | x_t, x_0)$, i.e., the distribution of the less noisy images $x_{t-1}$ given the current noisy image $x_t$ or `z` and the initial image $x_0$ or `x`.
 - `approximate(self, z: Tensor, t: Tensor, hat: Tensor) -> Distribution`: This method computes the approximate posterior distribution $p_\theta(x_{t-1} | x_t)$, i.e., the distribution of the less noisy images $x_{t-1}$ given the current noisy image $x_t$ or `z`. This is an approximation to the true posterior distribution that is easier to sample from or compute. The tensor `hat` is the output of the denoiser network containing the predicted parameters -- named this way because predicted values often are denoted with a hat, e.g., $\hat{\epsilon}$.
@@ -119,7 +119,7 @@ class Gaussian(Noise[N]):
         self.alpha = alpha
         self.delta = alpha.cumprod(0)
 
-    def isotropic(self, shape: tuple[int, ...]) -> N:
+    def stationary(self, shape: tuple[int, ...]) -> N:
         return N(torch.zeros(shape), torch.ones(shape))
 
     def prior(self, x: Tensor, t: Tensor) -> N:
@@ -148,7 +148,7 @@ class Gaussian(Noise[N]):
 >
 > You will notice that some methods start with a statement that reshapes the tensor `t`. This only done to allow broadcasting of the tensors in the subsequent operations. For instance, in the `prior` method, we need to multiply `self.alpha[t].sqrt()` by `x`, but `self.alpha` has shape `[t]` and `x` has shape `[b, c, h, w]`. By reshaping `t` to `[b, 1, 1, 1]`, we can multiply `self.alpha[t].sqrt()` by `x` without any issues.
 
-The `schedule` method precomputes `alpha` and `delta` (cumulative product of `alpha`) values, which are used in the other methods. The `isotropic` method defines the initial noise distribution, while `prior`, `posterior`, and `approximate` methods implement the corresponding mathematical equations for the prior, posterior, and approximate posterior distributions. Collectively, these methods define the complete Gaussian noise model from the original DDPM paper. Note that it is possible to achieve a more efficient solution by precomputing some of the recurrent expressions used in the methods.
+The `schedule` method precomputes `alpha` and `delta` (cumulative product of `alpha`) values, which are used in the other methods. The `stationary` method defines the initial noise distribution, while `prior`, `posterior`, and `approximate` methods implement the corresponding mathematical equations for the prior, posterior, and approximate posterior distributions. Collectively, these methods define the complete Gaussian noise model from the original DDPM paper. Note that it is possible to achieve a more efficient solution by precomputing some of the recurrent expressions used in the methods.
 
 ## Denoiser neural network
 
@@ -207,7 +207,3 @@ loss = Simple(parameter="epsilon") + 0.001 * VLB()
 ## Guidance
 
 As of right now, `ClassifierFree` guidance is hardcoded into the diffusion process, and there is no way of extending the base `Guidance` class, unless you create your own custom `Model` class. You can expect this behavior to change in an upcoming release. Please refer to our official [Issue Tracker]() for updates, and learn how you can contribute in our [Contributing Guide](). 
-
----
-
-*If you spot any typo or technical imprecision, please submit an issue or pull request to the library's [GitHub repository](https://github.com/cabralpinto/modular-diffusion).*
