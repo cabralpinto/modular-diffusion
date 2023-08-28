@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "modular-diffusion"
-version = "0.0.2"
+version = "0.0.3"
 authors = [{ name = "João Cabral Pinto", email = "jmcabralpinto@gmail.com" }]
 description = "Modular Diffusion"
 readme = "README.md"
@@ -13,6 +13,11 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+]
+dependencies = [
+  "einops==0.6.1",
+  "tqdm==4.64.1",
+  "typing_extensions==4.7.1",
 ]
 
 [project.urls]
