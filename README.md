@@ -58,9 +58,11 @@ z = rearrange(z, "t b c h w -> c (b h) (t w)")
 save_image((z + 1) / 2, "output.png")
 ```
 
-Finally, marvel at the results.
+Finally, marvel at the results. 
 
-<img width="360" alt="Modular Diffusion teaser" src="https://github.com/cabralpinto/modular-diffusion/assets/47889626/2756f798-8037-460e-b827-255812f203b6">
+<img width="360" alt="Modular Diffusion teaser" src="https://github.com/cabralpinto/modular-diffusion/assets/47889626/2756f798-8037-460e-b827-255812f203b6">&nbsp;
+
+Check out more examples [here](https://github.com/cabralpinto/modular-diffusion/tree/main/examples).
 
 ## Contributing
 
