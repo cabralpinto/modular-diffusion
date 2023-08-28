@@ -29,7 +29,7 @@ pip install modular-diffusion
 With Modular Diffusion, you can build and train a custom Diffusion Model in just a few lines. First, load and normalize your dataset. We are using the dog pictures from [AFHQ](https://paperswithcode.com/dataset/afhq).
 
 ```python
-x, _ = zip(*ImageFolder(str(input), ToTensor()))
+x, _ = zip(*ImageFolder("afhq", ToTensor()))
 x = resize(x, [h, w], antialias=False)
 x = torch.stack(x) * 2 - 1
 ```
