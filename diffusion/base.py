@@ -118,8 +118,8 @@ class Noise(ABC, Generic[D]):
         raise NotImplementedError
 
     @abstractmethod
-    def isotropic(self, shape: tuple[int, ...]) -> D:
-        """Compute the isotropic distribution q(x_T)"""
+    def stationary(self, shape: tuple[int, ...]) -> D:
+        """Compute the stationary distribution q(x_T)"""
         raise NotImplementedError
 
     @abstractmethod

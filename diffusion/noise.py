@@ -37,7 +37,7 @@ class Gaussian(Noise[N]):
         self.p3 = (1 - alpha).log()
         self.p4 = self.q5.log()
 
-    def isotropic(self, shape: tuple[int, ...]) -> N:
+    def stationary(self, shape: tuple[int, ...]) -> N:
         return N(torch.zeros(shape), torch.ones(shape))
 
     def prior(self, x: Tensor, t: Tensor) -> N:
@@ -137,7 +137,7 @@ class Uniform(MemoryEfficientCategorical):
     def a(self) -> Tensor:
         return torch.ones(self.k, self.k, device=self.i.device) / self.k
 
-    def isotropic(self, shape: tuple[int, ...]) -> Cat:
+    def stationary(self, shape: tuple[int, ...]) -> Cat:
         return Cat(torch.full(shape, 1 / self.k))
 
 
@@ -149,5 +149,5 @@ class Absorbing(MemoryEfficientCategorical):
     def a(self) -> Tensor:
         return self.i[:, self.m].repeat(1, self.k, 1)
 
-    def isotropic(self, shape: tuple[int, ...]) -> Cat:
+    def stationary(self, shape: tuple[int, ...]) -> Cat:
         return Cat(torch.eye(self.k)[self.m].repeat(*shape[:-1], 1))

@@ -69,7 +69,7 @@ class Model(Generic[D]):
     @torch.enable_grad()
     def train(self, epochs: int = 1, progress: bool = True) -> Iterator[float]:
         self.net.train()
-        batch = Batch[D](self.device)
+        batch = Batch[D](self.device) # type: ignore[union-attr]
         for _ in range(epochs):
             bar = tqdm(self.data, disable=not progress)
             for batch.w, batch.y in self.data:
@@ -103,7 +103,7 @@ class Model(Generic[D]):
             shape = 1, *(() if self.data.y is None else self.data.y.shape[1:])
             y = torch.zeros(shape, dtype=torch.int, device=self.device)
         y = y.repeat_interleave(batch, 0).to(self.device)
-        pi = self.noise.isotropic((y.shape[0], *self.data.shape))
+        pi = self.noise.stationary((y.shape[0], *self.data.shape))
         z = pi.sample()[0].to(self.device)
         l = self.data.decode(z)[None]
         bar = tqdm(total=self.schedule.steps, disable=not progress)
@@ -119,3 +119,22 @@ class Model(Generic[D]):
             bar.update()
         bar.close()
         return l
+
+    @torch.no_grad()
+    def load(self, path: Path | str):
+        state = torch.load(path)
+        self.net.load_state_dict(state["net"])
+        for name, dict in state["data"].items():
+            getattr(self.data, name).load_state_dict(dict)
+
+    @torch.no_grad()
+    def save(self, path: Path | str):
+        state = {
+            "net": self.net.state_dict(),
+            "data": {
+                name: value.state_dict()
+                for name, value in vars(self.data).items()
+                if isinstance(value, nn.Module)
+            }
+        }
+        torch.save(state, path)
