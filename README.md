@@ -62,7 +62,7 @@ Finally, marvel at the results.
 
 ## Contributing
 
-We appreciate your support and welcome your contributions! Please fell free to submit pull requests if you found a bug or typo you want to fix. If you want to contribute a new prebuilt module or feature, please start by opening an issue and discussing it with us. 
+We appreciate your support and welcome your contributions! Please fell free to submit pull requests if you found a bug or typo you want to fix. If you want to contribute a new prebuilt module or feature, please start by opening an issue and discussing it with us. If you don't know where to begin, take a look at the [open issues](https://github.com/cabralpinto/modular-diffusion/issues).
 
 ## License
 
