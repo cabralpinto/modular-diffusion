@@ -22,6 +22,8 @@ Modular Diffusion officially supports Python 3.10+ and is available on PyPI:
 pip install modular-diffusion
 ```
 
+You also need to install the correct [PyTorch distribution](https://pytorch.org/get-started/locally/) for your system.
+
 > **Note**: Although Modular Diffusion works with later Python versions, we currently recommend using Python 3.10. This is because `torch.compile`, which significantly improves the speed of the models, is not currently available for versions above Python 3.10.
 
 ## Usage
