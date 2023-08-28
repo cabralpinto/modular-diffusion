@@ -62,7 +62,7 @@ Finally, marvel at the results.
 
 <img width="360" alt="Modular Diffusion teaser" src="https://github.com/cabralpinto/modular-diffusion/assets/47889626/2756f798-8037-460e-b827-255812f203b6">&nbsp;
 
-Check out more examples [here](https://github.com/cabralpinto/modular-diffusion/tree/main/examples).
+Check out the [Getting Started Guide](https://cabralpinto.github.io/modular-diffusion/guides/getting-started/) to learn more and find more examples [here](https://github.com/cabralpinto/modular-diffusion/tree/main/examples).
 
 ## Contributing
 
