@@ -24,12 +24,12 @@ class Model(Generic[D]):
     data: Data
     schedule: Schedule
     noise: Noise[D]
-    loss: Loss[D]
     net: Net
+    loss: Loss[D]
     time: Time = field(default_factory=Discrete)
     guidance: Optional[Guidance] = None  # TODO remove hardcoding
     optimizer: Optional[Optimizer | Callable[..., Optimizer]] = None
-    device: torch.device = torch.device("cpu")
+    device: str | torch.device = torch.device("cpu")
     compile: bool = True
 
     @torch.no_grad()
@@ -43,28 +43,11 @@ class Model(Generic[D]):
         self.net = self.net.to(self.device)
         for name, value in vars(self.data).items():
             if isinstance(value, nn.Module):
-                setattr(self.data, name, value.to(self.device)) 
+                setattr(self.data, name, value.to(self.device))
         if self.compile and sys.version_info < (3, 11):
             self.net = torch.compile(self.net)  # type: ignore[union-attr]
-
-    @torch.no_grad()
-    def load(self, path: Path | str):
-        state = torch.load(path)
-        self.net.load_state_dict(state["net"])
-        for name, dict in state["data"].items():
-            getattr(self.data, name).load_state_dict(dict)
-
-    @torch.no_grad()
-    def save(self, path: Path | str):
-        state = {
-            "net": self.net.state_dict(),
-            "data": {
-                name: value.state_dict()
-                for name, value in vars(self.data).items()
-                if isinstance(value, nn.Module)
-            }
-        }
-        torch.save(state, path)
+        if isinstance(self.device, str):
+            self.device = torch.device(self.device)
 
     @torch.enable_grad()
     def train(self, epochs: int = 1, progress: bool = True) -> Iterator[float]:

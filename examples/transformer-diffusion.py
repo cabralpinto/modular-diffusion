@@ -51,7 +51,7 @@ model = diffusion.Model(
     noise=Gaussian(parameter="epsilon", variance="fixed"),
     net=Transformer(input=x.shape[2], width=768, depth=12, heads=12),
     loss=Simple(parameter="epsilon"),
-    device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
+    device="cuda" if torch.cuda.is_available() else "cpu",
 )
 
 if (output / "model.pt").exists():

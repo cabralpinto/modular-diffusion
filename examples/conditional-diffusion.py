@@ -34,7 +34,7 @@ model = diffusion.Model(
     net=UNet(channels=(1, 64, 128, 256), labels=10),
     guidance=ClassifierFree(dropout=0.1, strength=2),
     loss=Simple(parameter="epsilon"),
-    device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
+    device="cuda" if torch.cuda.is_available() else "cpu",
 )
 
 if (output / "model.pt").exists():

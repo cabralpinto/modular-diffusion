@@ -32,7 +32,7 @@ model = diffusion.Model(
     noise=Gaussian(parameter="epsilon", variance="fixed"),
     net=UNet(channels=(1, 64, 128, 256)),
     loss=Simple(parameter="epsilon"),
-    device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
+    device="cuda" if torch.cuda.is_available() else "cpu",
 )
 
 if (output / "model.pt").exists():

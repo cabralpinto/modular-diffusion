@@ -45,7 +45,7 @@ model = diffusion.Model(
     noise=Absorbing(len(v)),
     loss=VLB() + 1e-2 * Lambda[Cat](lambda batch: Cat(batch.hat[0]).nll(batch.x).sum()),
     net=Transformer(input=len(v), width=1024, depth=16, heads=16) | Softmax(3),
-    device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
+    device="cuda" if torch.cuda.is_available() else "cpu",
 )
 
 if (output / "model.pt").exists():
