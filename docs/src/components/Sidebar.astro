@@ -21,7 +21,7 @@ const articles = (await Astro.glob("../pages/[!_]*/*.mdx"))
   {
     Object.entries(articles).map(([group, titles]) => (
       <group class="text-sm">
-        <h1 class="font-medium mb-1">{group}</h1>
+        <h2 class="font-medium mb-1">{group}</h2>
         <ul>
           {titles.map(({ title, href }) => (
             <li class="text-gray-600 hover:text-gray-800 hover:font-medium transition-colors w-full">

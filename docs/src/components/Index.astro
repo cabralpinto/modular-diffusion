@@ -12,7 +12,7 @@ headings[0].text = "Overview";
 <div
   class="hidden xl:block sticky top-8 w-64 pr-16 pt-16 h-full text-sm min-w-fit"
 >
-  <h1 class="font-medium mb-1">On this page</h1>
+  <h2 class="font-medium mb-1">On this page</h2>
   <ul class="index">
     {
       headings.map((heading) => (
@@ -28,7 +28,6 @@ headings[0].text = "Overview";
 
 <script>
   const items = document.querySelectorAll(".index li");
-  const article = document.querySelector("article");
   const headings = document.querySelectorAll("article :is(h1, h2)");
 
   document.addEventListener("scroll", () => {
