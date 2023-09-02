@@ -1,0 +1,6 @@
+authors:
+  - family-names: Cabral Pinto
+    given-names: João
+cff-version: 1.2.0
+message: "If you use this library, please cite it using these metadata."
+title: "Modular Diffusion"
