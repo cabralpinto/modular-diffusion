@@ -3,6 +3,7 @@
 [![PyPI version](https://badge.fury.io/py/modular-diffusion.svg)](https://badge.fury.io/py/modular-diffusion)
 [![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://cabralpinto.github.io/modular-diffusion/)
 [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://lbesson.mit-license.org/)
+[![Discord](https://dcbadge.vercel.app/api/server/4uBXpwg6?style=flat&compact=true)](https://discord.gg/4uBXpwg6)
 
 Modular Diffusion provides an easy-to-use modular API to design and train custom Diffusion Models with PyTorch. Whether you're an enthusiast exploring Diffusion Models or a hardcore ML researcher, **this framework is for you**.
 
