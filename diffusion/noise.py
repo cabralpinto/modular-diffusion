@@ -50,18 +50,6 @@ class Gaussian(Noise[N]):
 
     def approximate(self, z: Tensor, t: Tensor, hat: Tensor) -> N:
         t = t.view(-1, *(1,) * (z.dim() - 1))
-        # mu =  + self.p2[t] * hat[0]
-        # print(z.min().item(), z.max().item(), flush=True)
-        # print(self.p1[t].min().item(), self.p1[t].max().item(), flush=True)
-
-        # x = (z - (1 - self.delta[t]) * hat[0]) / self.delta[t].sqrt()
-        # print(x.min().item(), x.max().item(), flush=True)
-        # if self.parameter == "epsilon":
-        #     x = (z - (1 - self.delta[t]) * hat[0]) / self.delta[t].sqrt()
-        # else:
-        #     x = hat[0]
-        # print(x.min().item(), x.max().item(), flush=True)
-
         return N(
             self.p1[t] * z + self.p2[t] * hat[0],
             self.q5[t]
