@@ -4,5 +4,6 @@ __pycache__
 env
 nohup.out
 private
-examples/data
+examples/data/in
+examples/data/out
 dist
