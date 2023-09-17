@@ -152,7 +152,7 @@ The `schedule` method precomputes `alpha` and `delta` (cumulative product of `al
 
 ## Denoiser neural network
 
-Modular Diffusion comes with general-use `UNet` and `Transformer` classes, which have proven to be effective denoising networks in the context of Diffusion Models. However, it is not uncommon to see authors make modifications to these networks to achieve even better results. To design your own original network, extend the base abstract `Net` class. This class acts as only a thin wrapper over the standard PyTorch `nn.Module` class, meaning you can use it exactly the same way. The `forward` method should take three tensor arguments: the noisy input `x`, the conditioning matrix `y`, and the diffusion time steps `t`.
+Modular Diffusion comes with general-use `UNet` and `Transformer` classes, which have proven to be effective denoising networks in the context of Diffusion Models. However, it is not uncommon to see authors make modifications to these networks to achieve even better results. To design your own original network, extend the base abstract `Net` class. This class acts as only a thin wrapper over the standard Pytorch `nn.Module` class, meaning you can use it exactly the same way. The `forward` method should take three tensor arguments: the noisy input `x`, the conditioning matrix `y`, and the diffusion time steps `t`.
 
 > Network output shape
 >

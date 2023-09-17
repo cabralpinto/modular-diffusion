@@ -20,11 +20,11 @@ Before you start, please install Modular Diffusion in your local Python environm
 python -m pip install modular-diffusion
 ```
 
-Additionally, ensure you've installed the correct [PyTorch distribution](https://pytorch.org/get-started/locally/) for your system.
+Additionally, ensure you've installed the correct [Pytorch distribution](https://pytorch.org/get-started/locally/) for your system.
 
 ## Train a simple model
 
-The first step before training a Diffusion Model is to load your dataset. In this example, we will be using [MNIST](http://yann.lecun.com/exdb/mnist/), which includes 70,000 grayscale images of handwritten digits, and is a great simple dataset to prototype your image models. We are going to load MNIST with [PyTorch Vision](https://pytorch.org/vision/stable/index.html), but you can load your dataset any way you like, as long as it results in a `torch.Tensor` object. We are also going to discard the labels and scale the data to the commonly used $[-1, 1]$ range.
+The first step before training a Diffusion Model is to load your dataset. In this example, we will be using [MNIST](http://yann.lecun.com/exdb/mnist/), which includes 70,000 grayscale images of handwritten digits, and is a great simple dataset to prototype your image models. We are going to load MNIST with [Pytorch Vision](https://pytorch.org/vision/stable/index.html), but you can load your dataset any way you like, as long as it results in a `torch.Tensor` object. We are also going to discard the labels and scale the data to the commonly used $[-1, 1]$ range.
 
 ```python
 import torch
