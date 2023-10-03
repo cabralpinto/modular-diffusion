@@ -67,7 +67,7 @@ Check out the [Getting Started Guide](https://cabralpinto.github.io/modular-diff
 
 ## Contributing
 
-We appreciate your support and welcome your contributions! Please fell free to submit pull requests if you found a bug or typo you want to fix. If you want to contribute a new prebuilt module or feature, please start by opening an issue and discussing it with us. If you don't know where to begin, take a look at the [open issues](https://github.com/cabralpinto/modular-diffusion/issues). Please read our [Contributing Guide](https://github.com/cabralpinto/modular-diffusion/blob/main/CONTRIBUTING.md) for more details.
+We appreciate your support and welcome your contributions! Please feel free to submit pull requests if you found a bug or typo you want to fix. If you want to contribute a new prebuilt module or feature, please start by opening an issue and discussing it with us. If you don't know where to begin, take a look at the [open issues](https://github.com/cabralpinto/modular-diffusion/issues). Please read our [Contributing Guide](https://github.com/cabralpinto/modular-diffusion/blob/main/CONTRIBUTING.md) for more details.
 
 ## License
 
