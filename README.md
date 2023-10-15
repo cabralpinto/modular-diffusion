@@ -3,7 +3,7 @@
 [![PyPI version](https://badge.fury.io/py/modular-diffusion.svg)](https://badge.fury.io/py/modular-diffusion)
 [![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://cabralpinto.github.io/modular-diffusion/)
 [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://lbesson.mit-license.org/)
-[![Discord](https://dcbadge.vercel.app/api/server/zUpYzQBm?style=flat&compact=true)](https://discord.gg/zUpYzQBm)
+[![Discord](https://dcbadge.vercel.app/api/server/mYJWQATfTV?style=flat&compact=true)](https://discord.gg/mYJWQATfTV)
 
 Modular Diffusion provides an easy-to-use modular API to design and train custom Diffusion Models with PyTorch. Whether you're an enthusiast exploring Diffusion Models or a hardcore ML researcher, **this framework is for you**.
 
@@ -67,7 +67,7 @@ Check out the [Getting Started Guide](https://cabralpinto.github.io/modular-diff
 
 ## Contributing
 
-We appreciate your support and welcome your contributions! Please fell free to submit pull requests if you found a bug or typo you want to fix. If you want to contribute a new prebuilt module or feature, please start by opening an issue and discussing it with us. If you don't know where to begin, take a look at the [open issues](https://github.com/cabralpinto/modular-diffusion/issues). Please read our [Contributing Guide](https://github.com/cabralpinto/modular-diffusion/blob/main/CONTRIBUTING.md) for more details.
+We appreciate your support and welcome your contributions! Please feel free to submit pull requests if you found a bug or typo you want to fix. If you want to contribute a new prebuilt module or feature, please start by opening an issue and discussing it with us. If you don't know where to begin, take a look at the [open issues](https://github.com/cabralpinto/modular-diffusion/issues). Please read our [Contributing Guide](https://github.com/cabralpinto/modular-diffusion/blob/main/CONTRIBUTING.md) for more details.
 
 ## License
 

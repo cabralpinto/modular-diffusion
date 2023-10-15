@@ -16,6 +16,7 @@ In Modular Diffusion, the `Model` class is a high-level interface that allows yo
 - `net` -> Denoising network module.
 - `loss` -> Loss function module.
 - `guidance` (Default: `None`) -> Optional guidance module.
+- `optimizer` (Default: `partial(Adam, lr=1e-4)`) -> Pytorch optimizer constructor function.
 - `device` (Default: `"cpu"`) -> Device to train the model on.
 - `compile` (Default: `true`) -> Whether to compile the model with `torch.compile` for faster training.
 
@@ -28,6 +29,8 @@ from diffusion.loss import Simple
 from diffusion.net import UNet
 from diffusion.noise import Gaussian
 from diffusion.schedule import Cosine
+from torch.optim import AdamW
+from functools import partial
 
 model = diffusion.Model(
     data=Identity(x, y, batch=128, shuffle=True),
@@ -36,6 +39,7 @@ model = diffusion.Model(
     net=UNet(channels=(1, 64, 128, 256), labels=10),
     loss=Simple(parameter="epsilon"),
     guidance=ClassifierFree(dropout=0.1, strength=2),
+    optimizer=partial(AdamW, lr=3e-4),
     device="cuda" if torch.cuda.is_available() else "cpu",
 )
 ```
