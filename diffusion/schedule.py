@@ -35,7 +35,6 @@ class Cosine(Schedule):
         delta = ((t / (self.steps + 2) + self.offset) / (1 + self.offset) * torch.pi /
                    2).cos()**self.exponent
         alpha = torch.clip(delta[1:] / delta[:-1], 1e-3, 1)
-        # TODO check if this is correct
         return alpha
 
 
@@ -45,6 +44,6 @@ class Sqrt(Schedule):
 
     def compute(self) -> Tensor:
         t = torch.arange(self.steps + 2)
-        delta = 1 - torch.sqrt(t / self.steps + self.offset)
+        delta = 1 - torch.sqrt(t / (self.steps + 1) + self.offset)
         alpha = torch.clip(delta[1:] / delta[:-1], 0, 0.999)
         return alpha
