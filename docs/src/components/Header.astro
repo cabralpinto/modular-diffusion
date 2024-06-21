@@ -1,10 +1,10 @@
 <header
-  class="fixed w-full bg-white flex items-center border-b h-12 sm:h-14 px-7 sm:px-10 z-50 text-sm sm:text-base overflow-x-auto"
+  class="fixed w-full bg-white dark:bg-gray-900 flex items-center border-b border-gray-200 dark:border-gray-700 h-12 sm:h-14 px-7 sm:px-10 z-50 text-sm sm:text-base overflow-x-auto"
 >
-  <div class="sm:hidden bg-gradient-to-r from-white to-transparent h-11 w-7 fixed left-0"></div>
+  <div class="sm:hidden bg-gradient-to-r from-white dark:from-gray-900 to-transparent h-11 w-7 fixed left-0"></div>
   <img
     src="/modular-diffusion/images/menu.svg"
-    class="toggle lg:hidden h-7 hover:scale-y-110 transition-[transform] -ml-1.5 mr-4 sm:mr-6 cursor-pointer"
+    class="toggle lg:hidden h-7 hover:scale-y-110 -ml-1.5 mr-4 sm:mr-6 cursor-pointer dark:filter dark:invert"
     alt="Menu"
   />
   <a class="flex items-center" href="/modular-diffusion/">
@@ -12,37 +12,81 @@
       class="mr-3 rounded-md"
       src="/modular-diffusion/images/logo.png"
       alt="Logo"
+      class="dark:filter dark:invert"
     />
-    <p class="whitespace-nowrap">Modular Diffusion</p>
+    <p class="whitespace-nowrap text-gray-900 dark:text-gray-100">Modular Diffusion</p>
   </a>
   <div class="grow px-8"></div>
   <a
-    class="hover:underline"
-    href="https://github.com/cabralpinto/modular-diffusion">GitHub</a
+    class="hover:underline text-gray-900 dark:text-gray-100 dark:hover:text-gray-300"
+    href="https://github.com/cabralpinto/modular-diffusion"
   >
+    GitHub
+  </a>
   <a
-    class="ml-4 sm:ml-6 hover:underline"
-    href="https://discord.com/invite/4uBXpwg6">Discord</a
+    class="ml-4 sm:ml-6 hover:underline text-gray-900 dark:text-gray-100 dark:hover:text-gray-300"
+    href="https://discord.com/invite/4uBXpwg6"
   >
+    Discord
+  </a>
   <a
-    class="ml-4 sm:ml-6 hover:underline"
-    href="https://pypi.org/project/modular-diffusion/">PyPI</a
+    class="ml-4 sm:ml-6 hover:underline text-gray-900 dark:text-gray-100 dark:hover:text-gray-300"
+    href="https://pypi.org/project/modular-diffusion"
   >
-  <div class="sm:hidden bg-gradient-to-l from-white to-transparent h-11 w-7 fixed right-0"></div>
+    PyPI
+  </a>
+  <button id="dark-mode-toggle" class="hidden sm:flex ml-4 p-2 rounded bg-gray-200 dark:bg-gray-700 hover:scale-110 transition-transform duration-300 relative items-center">
+    <i id="dark-mode-icon" class="fas fa-sun text-yellow-500"></i>
+  </button>
+  <div class="sm:hidden bg-gradient-to-l from-white dark:from-gray-900 to-transparent h-11 w-7 fixed right-0"></div>
 </header>
 
 <script>
   const toggle = document.querySelector(".toggle");
+  const darkModeToggle = document.getElementById('dark-mode-toggle');
+  const darkModeIcon = document.getElementById('dark-mode-icon');
   const nav = document.querySelector("nav");
   const article = document.querySelector("article");
+
   toggle?.addEventListener("click", () => {
     nav?.classList.toggle("-ml-72");
     nav?.classList.toggle("ml-0");
     article?.classList.toggle("blur-sm");
   });
+
   article?.addEventListener("click", () => {
     nav?.classList.add("-ml-72");
     nav?.classList.remove("ml-0");
     article?.classList.remove("blur-sm");
   });
+
+  darkModeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    const isDark = document.documentElement.classList.contains('dark');
+    const theme = isDark ? 'dark' : 'light';
+    localStorage.setItem('theme', theme);
+    updateDarkModeIcon(isDark);
+  });
+
+  // Function to update icon based on the mode
+  function updateDarkModeIcon(isDark) {
+    if (isDark) {
+      darkModeIcon.classList.remove('fa-sun');
+      darkModeIcon.classList.add('fa-moon');
+      darkModeIcon.classList.remove('text-yellow-500');
+      darkModeIcon.classList.add('text-gray-200');
+    } else {
+      darkModeIcon.classList.remove('fa-moon');
+      darkModeIcon.classList.add('fa-sun');
+      darkModeIcon.classList.remove('text-gray-200');
+      darkModeIcon.classList.add('text-yellow-500');
+    }
+  }
+
+  // Apply the saved theme on load
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    document.documentElement.classList.add(savedTheme);
+    updateDarkModeIcon(savedTheme === 'dark');
+  }
 </script>

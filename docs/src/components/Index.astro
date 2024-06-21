@@ -10,13 +10,13 @@ headings[0].text = "Overview";
 ---
 
 <div
-  class="hidden xl:block sticky top-8 w-64 pr-16 pt-16 h-full text-sm min-w-fit"
+  class="hidden xl:block sticky top-8 w-64 pr-16 pt-16 h-full text-sm min-w-fit bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
 >
-  <h2 class="font-medium mb-1">On this page</h2>
+  <h2 class="font-medium mb-1 text-gray-900 dark:text-gray-100">On this page</h2>
   <ul class="index">
     {
       headings.map((heading) => (
-        <li class="text-gray-600 hover:text-gray-800 hover:font-medium transition-colors w-full">
+        <li class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-300 hover:font-medium transition-colors w-full">
           <a class="block py-1" href={`#${heading.slug}`}>
             {heading.text}
           </a>
