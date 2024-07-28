@@ -5,6 +5,7 @@ import Header from "../components/Header.astro";
 import Index from "../components/Index.astro";
 import Sidebar from "../components/Sidebar.astro";
 import "../styles/fonts.css";
+import "../styles/global.css";
 
 type Props = MarkdownLayoutProps<{
   title: string;
@@ -19,27 +20,37 @@ const {
 
 <!DOCTYPE html>
 <html class="scroll-smooth scroll-pt-[5.5rem]" style="zoom: 105%" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="/modular-diffusion/images/logo.ico"
-    />
-    <title>{title} | Modular Diffusion</title>
-    <meta
-      name="description"
-      content="Learn about Modular Diffusion, an easy-to-use Python library for designing and training your own custom Generative Diffusion Models."
-    />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
-      integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"
-      crossorigin="anonymous"
-    />
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="icon"
+    type="image/x-icon"
+    href="/modular-diffusion/images/logo.ico"
+  />
+  <title>{title} | Modular Diffusion</title>
+  <meta
+    name="description"
+    content="Learn about Modular Diffusion, an easy-to-use Python library for designing and training your own custom Generative Diffusion Models."
+  />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7"
+    crossorigin="anonymous"
+  />
+  <script>
+    const theme = `(function() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.documentElement.classList.add(savedTheme);
+      }
+    })();`
+  </script>
+</head>
+
+
   <body>
     <div class="flex flex-col text-gray-800">
       <Header />

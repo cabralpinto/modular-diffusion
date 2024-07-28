@@ -16,7 +16,7 @@ When tinkering with Diffusion Models, the time will come when you need to ventur
 
 ## Data transform
 
-In many Diffusion Model applications, the diffusion process takes place in the dataset space. If this is your case, the prebuilt `Identity` data transform module will serve your purposes, leaving your data untouched before applying noise during training. However, a growing number of algorithms, like [Stable Diffusion](https://arxiv.org/abs/2112.10752) and [Diffusion-LM](https://arxiv.org/abs/2205.14217), project data onto a latent space before applying diffusion. 
+In many Diffusion Model applications, the diffusion process takes place in the dataset space. If this is your case, the prebuilt `Identity` data transform module will serve your purposes, leaving your data untouched before applying noise during training. However, a growing number of algorithms, like [Stable Diffusion](https://arxiv.org/abs/2112.10752) and [Diffusion-LM](https://arxiv.org/abs/2205.14217), project data onto a latent space before applying diffusion.
 
 In the case of Diffusion-LM, the dataset consists of sequences of word IDs, but the diffusion process happens in the word embedding space. This means you need a way of converting sequences of word IDs into sequences of embeddings, and train the embeddings along with the Diffusion Model. In Modular Diffusion, this can be achieved by extending the `Data` base class and implement its `encode` and `decode` methods. The former projects the data into the latent space and the latter retrieves it to the dataset space. Let's take a look at how you could implement the aforementioned transform:
 
@@ -60,6 +60,7 @@ class Linear(Schedule):
 ```
 
 Given that `steps` is already a parameter in the base class, all we need to do is define `start` and `end` parameters, and use them to compute the $a_t$ values. Then, we can initialize the schedule with the syntax `Linear(steps, start, end)`.
+
 ## Probability distribution
 
 In the diffusion process, the chosen probability distribution plays a crucial role in modeling the noise that guides the transition between different states. The library comes prepackaged with a growing set of commonly used distributions, such as the `Normal` distribution, but different applications or experimental setups might require you to implement your own.
@@ -96,7 +97,7 @@ In most Diffusion Model applications, the standard choice of noise is Gaussian, 
 
 - `schedule(self, alpha: Tensor) -> None`: This method is intended for precomputing resources based on the noise schedule $\alpha_t$ for $t \in {0,\dots,T}$. This can be beneficial for performance reasons when some calculations can be done ahead of time. A common use is calculating $\bar{\alpha}_{t}=\prod_{t=1}^{T}\alpha_{t}$.
 - `stationary(self, shape: tuple[int, ...]) -> Distribution`: This method is tasked with computing the stationary distribution $q(x_T)$, i.e., the noise distribution at the final time step, given a target shape.
-- `prior(self, x: Tensor, t: Tensor) -> Distribution`: This method computes the prior distribution $q(x_t | x_0)$, i.e., the distribution of the noisy images $x_t$ or `z`  given the initial image $x_0$ or `x`.
+- `prior(self, x: Tensor, t: Tensor) -> Distribution`: This method computes the prior distribution $q(x_t | x_0)$, i.e., the distribution of the noisy images $x_t$ or `z` given the initial image $x_0$ or `x`.
 - `posterior(self, x: Tensor, z: Tensor, t: Tensor) -> Distribution`: This method computes the posterior distribution $q(x_{t-1} | x_t, x_0)$, i.e., the distribution of the less noisy images $x_{t-1}$ given the current noisy image $x_t$ or `z` and the initial image $x_0$ or `x`.
 - `approximate(self, z: Tensor, t: Tensor, hat: Tensor) -> Distribution`: This method computes the approximate posterior distribution $p_\theta(x_{t-1} | x_t)$, i.e., the distribution of the less noisy images $x_{t-1}$ given the current noisy image $x_t$ or `z`. This is an approximation to the true posterior distribution that is easier to sample from or compute. The tensor `hat` is the output of the denoiser network containing the predicted parameters -- named this way because predicted values often are denoted with a hat, e.g., $\hat{\epsilon}$.
 
@@ -206,4 +207,4 @@ loss = Simple(parameter="epsilon") + 0.001 * VLB()
 
 ## Guidance
 
-As of right now, `ClassifierFree` guidance is hardcoded into the diffusion process, and there is no way of extending the base `Guidance` class, unless you create your own custom `Model` class. You can expect this behavior to change in an upcoming release. Please refer to our official [Issue Tracker](https://github.com/cabralpinto/modular-diffusion/issues) for updates. 
+As of right now, `ClassifierFree` guidance is hardcoded into the diffusion process, and there is no way of extending the base `Guidance` class, unless you create your own custom `Model` class. You can expect this behavior to change in an upcoming release. Please refer to our official [Issue Tracker](https://github.com/cabralpinto/modular-diffusion/issues) for updates.

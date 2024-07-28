@@ -1,9 +1,185 @@
 ---
 id: 1.4
 title: "Text Generation"
-index: false
+index: true
 ---
 
 # {frontmatter.title}
 
-*This page is under construction. Please check back later.*
+In this guide, we'll explore how to leverage Modular Diffusion for text generation. We'll start with a basic setup, progress to more advanced configurations, and include examples of both unconditional and conditional text generation.
+
+> Prerequisites
+>
+> This guide assumes familiarity with Diffusion Models and PyTorch. If you need a primer on Diffusion Models, consider reviewing introductory materials first.
+
+## Setting Up
+
+### Installation
+
+First, ensure that Modular Diffusion and the appropriate PyTorch version are installed in your environment:
+
+```sh
+pip install modular-diffusion
+```
+
+Refer to the [PyTorch installation guide](https://pytorch.org/get-started/locally/) to install the correct version for your system.
+
+## Basic Text Generation
+
+### Preparing the Dataset
+
+We’ll use a simple text dataset to illustrate the text generation process. Here’s how to load and preprocess the dataset:
+
+```python
+import torch
+from torch.utils.data import Dataset, DataLoader
+
+class TextDataset(Dataset):
+    def __init__(self, texts):
+        self.texts = texts
+        self.tokenizer = lambda x: x.split()
+
+    def __len__(self):
+        return len(self.texts)
+
+    def __getitem__(self, idx):
+        tokens = self.tokenizer(self.texts[idx])
+        return torch.tensor([ord(c) for c in tokens])
+
+texts = ["hello world", "modular diffusion is great", "diffusion models are powerful"]
+dataset = TextDataset(texts)
+loader = DataLoader(dataset, batch_size=2, shuffle=True)
+```
+
+### Building the Model
+
+Next, we'll build a Diffusion Model using prebuilt components from Modular Diffusion:
+
+```python
+import diffusion
+from diffusion.data import Identity
+from diffusion.loss import Simple
+from diffusion.net import Transformer
+from diffusion.noise import Gaussian
+from diffusion.schedule import Linear
+
+model = diffusion.Model(
+    data=Identity(dataset, batch=2, shuffle=True),
+    schedule=Linear(1000, 0.9999, 0.98),
+    noise=Gaussian(parameter="epsilon", variance="fixed"),
+    net=Transformer(input=256, labels=256, parameters=1, depth=2, width=128, heads=2),
+    loss=Simple(parameter="epsilon"),
+    device="cuda" if torch.cuda.is_available() else "cpu",
+)
+```
+
+### Training and Sampling
+
+Train the model and sample text from it:
+
+```python
+losses = [*model.train(epochs=20)]
+z = model.sample(batch=2)
+```
+
+### Saving the Output
+
+Finally, convert the generated tensor back to text and save it:
+
+```python
+generated_text = "".join([chr(int(token)) for token in z[0].cpu().numpy()])
+with open("output.txt", "w") as f:
+    f.write(generated_text)
+```
+
+## Conditional Text Generation
+
+To condition the generation process, include labels in your dataset and adjust the model accordingly:
+
+```python
+class LabeledTextDataset(Dataset):
+    def __init__(self, texts, labels):
+        self.texts = texts
+        self.labels = labels
+        self.tokenizer = lambda x: x.split()
+
+    def __len__(self):
+        return len(self.texts)
+
+    def __getitem__(self, idx):
+        tokens = self.tokenizer(self.texts[idx])
+        return torch.tensor([ord(c) for c in tokens]), self.labels[idx]
+
+labels = [1, 2, 3]
+dataset = LabeledTextDataset(texts, labels)
+loader = DataLoader(dataset, batch_size=2, shuffle=True)
+
+from diffusion.guidance import ClassifierFree
+
+model = diffusion.Model(
+    data=Identity(dataset, batch=2, shuffle=True),
+    schedule=Cosine(steps=1000),
+    noise=Gaussian(parameter="epsilon", variance="fixed"),
+    net=Transformer(input=256, labels=10, parameters=1, depth=2, width=128, heads=2),
+    guidance=ClassifierFree(dropout=0.1, strength=2),
+    loss=Simple(parameter="epsilon"),
+    device="cuda" if torch.cuda.is_available() else "cpu",
+)
+
+z = model.sample(y=torch.arange(1, 3))
+generated_text = "".join([chr(int(token)) for token in z[0].cpu().numpy()])
+with open("conditional_output.txt", "w") as f:
+    f.write(generated_text)
+```
+
+## Advanced Configurations
+
+### Adding a Validation Loop
+
+To monitor the training process, you can add a validation loop:
+
+```python
+for epoch, loss in enumerate(model.train(epochs=20)):
+    z = model.sample(batch=2)
+    generated_text = "".join([chr(int(token)) for token in z[0].cpu().numpy()])
+    with open(f"{epoch}.txt", "w") as f:
+        f.write(generated_text)
+```
+
+### Customizing the Model
+
+Modular Diffusion allows easy customization. For instance, to use a different noise schedule:
+
+```python
+from diffusion.schedule import Cosine
+
+model = diffusion.Model(
+    data=Identity(dataset, batch=2, shuffle=True),
+    schedule=Cosine(steps=1000),
+    noise=Gaussian(parameter="epsilon", variance="fixed"),
+    net=Transformer(input=256, labels=256, parameters=1, depth=2, width=128, heads=2),
+    loss=Simple(parameter="epsilon"),
+    device="cuda" if torch.cuda.is_available() else "cpu",
+)
+```
+
+### Saving and Loading the Model
+
+Save your model for future use:
+
+```python
+model.save("model.pt")
+```
+
+To load the saved model:
+
+```python
+from pathlib import Path
+
+if Path("model.pt").exists():
+    model.load("model.pt")
+```
+
+## Conclusion
+
+This guide has covered the basics of text generation using Modular Diffusion, from setting up the environment and building a model, to training, sampling, and customizing the model. For more advanced use cases and further details, refer to the library's API reference and additional tutorials.

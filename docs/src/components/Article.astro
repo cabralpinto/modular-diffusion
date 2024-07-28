@@ -1,5 +1,5 @@
 <article
-  class="grow min-w-0 max-w-[43rem] p-10 sm:p-16 lg:blur-0 transition-[filter]"
+  class="grow min-w-0 max-w-[43rem] p-10 sm:p-16 lg:blur-0 transition-[filter] bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
 >
   <slot />
 </article>
@@ -23,20 +23,20 @@
       }
     }
     a {
-      @apply text-green-600 hover:underline;
+      @apply text-green-600 dark:text-green-400 hover:underline dark:hover:text-green-300;
     }
     li {
       @apply mb-3 ml-6 -indent-3;
       &::before {
-        @apply content-["\2022"] text-gray-300 inline-block w-3;
+        @apply content-["\2022"] text-gray-300 dark:text-gray-500 inline-block w-3;
       }
     }
     blockquote {
-      @apply my-5 sm:my-7 border border-green-600 bg-gray-50 rounded-md sm:rounded-lg p-5;
+      @apply my-5 sm:my-7 border border-green-600 dark:border-green-400 bg-gray-50 dark:bg-gray-800 rounded-md sm:rounded-lg p-5;
       > p {
         @apply mb-1.5 sm:mb-2;
         &:not(:first-child) {
-          @apply text-gray-600 text-xs/[1.15rem] sm:text-sm/[1.36rem] mb-0;
+          @apply text-gray-600 dark:text-gray-400 text-xs/[1.15rem] sm:text-sm/[1.36rem] mb-0;
           > code {
             @apply text-[0.625rem]/[0.75rem] sm:text-xs px-1 py-0.5;
           }
@@ -44,28 +44,25 @@
       }
     }
     code {
-      @apply text-xs sm:text-sm no-contextual;
+      @apply text-xs sm:text-sm no-contextual dark:text-gray-300;
       &:not(pre code) {
-        @apply px-1 sm:px-1 py-[0.0625rem] sm:py-0.5 bg-gray-200 rounded-md font-mono;
+        @apply px-1 sm:px-1 py-[0.0625rem] sm:py-0.5 bg-gray-200 dark:bg-gray-700 rounded-md font-mono;
       }
     }
     pre {
-      @apply my-5 sm:my-7 rounded-md sm:rounded-lg p-4 sm:p-5;
+      @apply my-5 sm:my-7 rounded-md sm:rounded-lg p-4 sm:p-5 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100;
     }
     img {
       @apply mx-auto my-5 sm:my-7 rounded-md sm:rounded-lg;
     }
     hr {
-      @apply my-6 sm:my-8 border-gray-200;
+      @apply my-6 sm:my-8 border-gray-200 dark:border-gray-700;
     }
     strong {
       @apply font-medium;
     }
     em {
-      @apply text-gray-500;
+      @apply text-gray-500 dark:text-gray-400;
     }
-    // .text {
-    //     @apply font-sans text-sm leading-6 sm:text-base sm:leading-7;
-    // }
   }
 </style>
